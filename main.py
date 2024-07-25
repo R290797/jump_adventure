@@ -41,23 +41,53 @@ window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
 
 # Functions
+
+# Event Handler (For User Inputs) TODO: Flatten (Move Movement Functions to Player Class)
 def event_handler():
+    global running 
+    global player
 
     # Iterate Through Pygame Events
     for event in pygame.event.get():
 
         # Running False when Quit Event (Press Red X)
         if event.type == pygame.QUIT:
-            global running 
             running = False
+
+        # Key Presses
+        if event.type == pygame.KEYDOWN:
+
+            if event.key == pygame.K_SPACE:
+                player.jump()
+
+            if event.key == pygame.K_LEFT:
+                player.x_delta -= player.speed
+
+            if event.key == pygame.K_RIGHT:
+                player.x_delta += player.speed
+
+            if event.key == pygame.K_q:
+                running = False
+
+        # Key Releases
+        if event.type == pygame.KEYUP:
+
+            if event.key == pygame.K_LEFT:
+                player.x_delta += player.speed
+
+            if event.key == pygame.K_RIGHT:
+                player.x_delta -= player.speed
+
+
+
 
 
 # Player
-player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=5)
+player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=5, jump_height=20, gravity=1)
 
 # TODO: Create Platform Spawner/List Class
 # Platforms (Temporary)
-platform_1 = Platform(x=300, y=400, width=100, height=5, color=colors["blue"], down_speed=1)
+platform_1 = Platform(x=1, y=400, width=1000, height=5, color=colors["blue"], down_speed=1)
 platform_2 = Platform(x=400, y=300, width=100, height=5, color=colors["blue"], down_speed=1)
 platform_3 = Platform(x=500, y=200, width=100, height=5, color=colors["blue"], down_speed=1)
 
@@ -68,19 +98,22 @@ platform_list = [platform_1, platform_2, platform_3]
 running = True
 while running:
 
-    # Tick Game
+    # Pygame Variables
     timer.tick(fps)
-
-    # Fill Screen (Order Matters - Items Drawn in Order from Back to Front)
     window.fill(colors["white"])
+    plat_rect_list = []
 
-    # Draw Actors
+    # Render Actors
     player.draw(window)
 
-    # Render Plartforms
     for plat in platform_list:
-        plat.draw(window)
+        plat_rect_list.append(plat.draw(window))
 
+    # Collision Detection
+    player.platform_collision(plat_rect_list)
+
+    # Update Actors (TODO: Summarize in Function)
+    player.update()
 
     # Event Handler
     event_handler()

@@ -11,11 +11,10 @@ class Platform(BaseModel):
     color: tuple[int, int, int] = Field(default=(0,0,255))
     vert_speed: PositiveInt = Field(default=1)
     horz_speed: PositiveInt = Field(default=0)
-
-
+   
     # Draw Platform
     def draw(self, window):
-        pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
+        return pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
 
     # Move Platform Down
     def move(self):
