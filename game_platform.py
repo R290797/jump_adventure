@@ -1,4 +1,5 @@
 import pygame
+import random
 from pydantic import BaseModel, Field, PositiveInt
 
 class Platform(BaseModel):
@@ -11,10 +12,15 @@ class Platform(BaseModel):
     color: tuple[int, int, int] = Field(default=(0,0,255))
     vert_speed: PositiveInt = Field(default=1)
     horz_speed: PositiveInt = Field(default=0)
+    down_speed: PositiveInt = Field(default=1)
+    radius: PositiveInt = Field(default=10)
    
     # Draw Platform
     def draw(self, window):
-        return pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
+        surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        pygame.draw.rect(surface, self.color, (0, 0, self.width, self.height), border_radius=self.radius)
+        window.blit(surface, (self.x, self.y))
+        return pygame.Rect(self.x, self.y, self.width, self.height)
 
     # Move Platform Down
     def move(self):

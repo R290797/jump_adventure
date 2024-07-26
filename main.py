@@ -1,5 +1,6 @@
 # Import Modules
 import pygame
+import random
 
 # Import Classes
 from player import Player
@@ -79,7 +80,15 @@ def event_handler():
                 player.x_delta -= player.speed
 
 
-
+# Random Platform Spawn
+def spawn_platform():
+    x = random.randint(0,screen_width-100)
+    y = random.randint(1,50)
+    width = random.randint(50,150)
+    height = 5
+    down_speed = random.randint(1,2)
+    color = random.choice(list(colors.values()))
+    return Platform(x=x,y=y,width=width,height=height,color=color,down_speed=down_speed)
 
 
 # Player
@@ -87,15 +96,17 @@ player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=5,
 
 # TODO: Create Platform Spawner/List Class
 # Platforms (Temporary)
-platform_1 = Platform(x=1, y=400, width=1000, height=5, color=colors["blue"], down_speed=1)
-platform_2 = Platform(x=400, y=300, width=100, height=5, color=colors["blue"], down_speed=1)
-platform_3 = Platform(x=500, y=200, width=100, height=5, color=colors["blue"], down_speed=1)
+platform_1 = Platform(x=1, y=400, width=1000, height=5, color=colors["blue"], down_speed=1, radius=15)
+platform_2 = Platform(x=400, y=300, width=100, height=5, color=colors["blue"], down_speed=1, radius=10)
+platform_3 = Platform(x=500, y=200, width=100, height=5, color=colors["blue"], down_speed=1, radius=20)
 
 # Platform List (Temporary)
 platform_list = [platform_1, platform_2, platform_3]
 
 # Game Loop
 running = True
+spawn_timer = 0
+
 while running:
 
     # Pygame Variables
@@ -103,14 +114,24 @@ while running:
     window.fill(colors["white"])
     plat_rect_list = []
 
+    # Spawn Platforms at Intervals
+    spawn_timer += 1
+    if spawn_timer >= 60:
+        platform_list.append(spawn_platform())
+        spawn_timer = 0
+
     # Render Actors
     player.draw(window)
 
     for plat in platform_list:
+        plat.move()
         plat_rect_list.append(plat.draw(window))
 
     # Collision Detection
     player.platform_collision(plat_rect_list)
+    
+    # Remove Platforms that are Off the Screen
+    platform_list = [plat for plat in platform_list if plat.y < screen_height]
 
     # Update Actors (TODO: Summarize in Function)
     player.update()
