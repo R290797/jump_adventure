@@ -5,7 +5,6 @@ import pygame
 from player import Player
 from game_platform import Platform
 
-
 # TODO: From Tutotrial (Update these Later) - Check Requirements
 #_______________________________________________________________________________________________________________________
 
@@ -40,11 +39,16 @@ timer = pygame.time.Clock()
 window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
 
+game_over = False
+# Font for Game Over Text
+font = pygame.font.SysFont(None, 55)
+
+
 # Functions
 
 # Event Handler (For User Inputs) TODO: Flatten (Move Movement Functions to Player Class)
 def event_handler():
-    global running 
+    global running
     global player
 
     # Iterate Through Pygame Events
@@ -79,7 +83,11 @@ def event_handler():
                 player.x_delta -= player.speed
 
 
-
+def render_text(text, font, color, surface, x, y):
+    textobj = font.render(text, True, color)
+    textrect = textobj.get_rect()
+    textrect.center = (x, y)
+    surface.blit(textobj, textrect)
 
 
 # Player
@@ -96,24 +104,28 @@ platform_list = [platform_1, platform_2, platform_3]
 
 # Game Loop
 running = True
+
 while running:
 
     # Pygame Variables
     timer.tick(fps)
     window.fill(colors["white"])
     plat_rect_list = []
+    if not game_over:
+        # Render Actors
+        player.draw(window)
 
-    # Render Actors
-    player.draw(window)
+        for plat in platform_list:
+            plat_rect_list.append(plat.draw(window))
 
-    for plat in platform_list:
-        plat_rect_list.append(plat.draw(window))
+        # Collision Detection
+        player.platform_collision(plat_rect_list)
 
-    # Collision Detection
-    player.platform_collision(plat_rect_list)
+        # Update Actors and Check for Game Over (TODO: Summarize in Function)
+        game_over = player.update(screen_width, screen_height)
 
-    # Update Actors (TODO: Summarize in Function)
-    player.update()
+    if game_over:
+        render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
 
     # Event Handler
     event_handler()
@@ -121,5 +133,5 @@ while running:
     # Update Display
     pygame.display.flip()
 
-
 pygame.quit()
+
