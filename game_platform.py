@@ -5,14 +5,14 @@ from pydantic import BaseModel, Field, PositiveInt
 class Platform(BaseModel):
 
     # Platform Attributes
-    x: PositiveInt
-    y: PositiveInt
+    x: int
+    y: int
     width: PositiveInt
     height: PositiveInt
     color: tuple[int, int, int] = Field(default=(0,0,255))
-    vert_speed: PositiveInt = Field(default=1)
-    horz_speed: PositiveInt = Field(default=0)
-    down_speed: PositiveInt = Field(default=1)
+    vert_speed: int = Field(default=1)
+    horz_speed: int = Field(default=0)
+    down_speed: int = Field(default=1)
     radius: PositiveInt = Field(default=10)
    
     # Draw Platform

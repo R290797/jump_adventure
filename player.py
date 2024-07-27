@@ -17,6 +17,8 @@ class Player(BaseModel):
     grounded: bool = Field(default=False)
     x_delta: int = Field(default=0)
     y_delta: int = Field(default=0)
+
+    player_outofbounds: bool = Field(default=False)
  
     # Draw Player
     def draw(self, window):
@@ -48,8 +50,9 @@ class Player(BaseModel):
 
         # Check for falling off the screen
         if self.y > screen_height:
-            return True
-        return False
+            self.player_outofbounds = True
+        else:
+            self.player_outofbounds = False
 
         # Wrap Around Logic
     def wrap_around(self, screen_width):

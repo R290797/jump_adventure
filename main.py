@@ -1,11 +1,11 @@
 # Import Modules
 import pygame
-import random
-import time 
+import time
 
 # Import Classes
 from player import Player
 from game_platform import Platform
+from platform_manager import Platform_Manager
 
 # TODO: From Tutotrial (Update these Later) - Check Requirements
 #_______________________________________________________________________________________________________________________
@@ -41,13 +41,9 @@ timer = pygame.time.Clock()
 window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
 
-game_over = False
+
 # Font for Game Over Text
 font = pygame.font.SysFont(None, 55)
-
-# Start Time for Timer
-start_time = time.time()
-final_time = 0  
 
 # Functions
 
@@ -87,21 +83,26 @@ def event_handler():
             if event.key == pygame.K_RIGHT:
                 player.x_delta -= player.speed
 
+# Create and Render Text on the Screen
+def render_text(text, font, color, surface, x, y):
+    textobj = font.render(text, True, color)
+    textrect = textobj.get_rect()
+    textrect.center = (x, y)
+    surface.blit(textobj, textrect)
 
-# Player
+# Creaste Player Object
 player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=5, jump_height=20, gravity=1)
 
 # TODO: Create Platform Spawner/List Class
-# Platforms (Temporary)
-platform_1 = Platform(x=1, y=400, width=1000, height=5, color=colors["blue"], down_speed=1, radius=15)
-platform_2 = Platform(x=400, y=300, width=100, height=5, color=colors["blue"], down_speed=1, radius=10)
-platform_3 = Platform(x=500, y=200, width=100, height=5, color=colors["blue"], down_speed=1, radius=20)
 
-# Platform List (Temporary)
-platform_list = [platform_1, platform_2, platform_3]
+# Create Platform Manager
+platform_manager = Platform_Manager()
 
 # Game Loop
 running = True
+game_over = False
+start_time = time.time()
+final_time = 0  
 
 while running:
 
@@ -109,23 +110,25 @@ while running:
     timer.tick(fps)
     window.fill(colors["white"])
     plat_rect_list = []
+
     if not game_over:
         # Render Actors
         player.draw(window)
 
-        for plat in platform_list:
-            plat_rect_list.append(plat.draw(window))
-
+        # Manage Platforms
+        platform_manager.manage_platforms(window, colors, timer)
 
         # Collision Detection
-        player.platform_collision(plat_rect_list)
+        player.platform_collision(platform_manager.rect_list)
 
         # Update Actors and Check for Game Over (TODO: Summarize in Function)
         game_over = player.update(screen_width, screen_height)
 
          # Capture the time at game over 
-        if game_over:
-            final_time = time.time() - start_time  
+        if player.player_outofbounds:
+            final_time = time.time() - start_time
+            game_over = True
+
     # Display the Timer/Score
     elapsed_time = final_time if game_over else time.time() - start_time
     score_text = f"Score: {int(elapsed_time)}"
@@ -133,6 +136,15 @@ while running:
    # Positioned near upper right corner 
     render_text(score_text, font, colors["black"], 
                 window, screen_width-715, 20) 
+    
+    # Debug - Show Platform Count
+    platform_count = f"Plats: {len(platform_manager.platform_list)}"
+    render_text(platform_count, font, colors["black"], window, screen_width-715, 50)
+
+    # Debug - Show Grounded Status
+    grounded_status = f"coll: {player.grounded}"
+    render_text(grounded_status, font, colors["black"], window, screen_width-715, 80)
+
     
     if game_over:
         render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
