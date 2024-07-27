@@ -1,6 +1,6 @@
 # Import Modules
 import pygame
-
+import time 
 # Import Classes
 from player import Player
 from game_platform import Platform
@@ -43,6 +43,9 @@ game_over = False
 # Font for Game Over Text
 font = pygame.font.SysFont(None, 55)
 
+# Start Time for Timer
+start_time = time.time()
+final_time = 0  
 
 # Functions
 
@@ -124,8 +127,20 @@ while running:
         # Update Actors and Check for Game Over (TODO: Summarize in Function)
         game_over = player.update(screen_width, screen_height)
 
+         # Capture the time at game over 
+        if game_over:
+            final_time = time.time() - start_time  
+    # Display the Timer/Score
+    elapsed_time = final_time if game_over else time.time() - start_time
+    score_text = f"Score: {int(elapsed_time)}"
+
+   # Positioned near upper right corner 
+    render_text(score_text, font, colors["black"], 
+                window, screen_width-715, 20) 
+    
     if game_over:
         render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
+
 
     # Event Handler
     event_handler()
