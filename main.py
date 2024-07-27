@@ -6,7 +6,6 @@ import random
 from player import Player
 from game_platform import Platform
 
-
 # TODO: From Tutotrial (Update these Later) - Check Requirements
 #_______________________________________________________________________________________________________________________
 
@@ -41,11 +40,16 @@ timer = pygame.time.Clock()
 window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
 
+game_over = False
+# Font for Game Over Text
+font = pygame.font.SysFont(None, 55)
+
+
 # Functions
 
 # Event Handler (For User Inputs) TODO: Flatten (Move Movement Functions to Player Class)
 def event_handler():
-    global running 
+    global running
     global player
 
     # Iterate Through Pygame Events
@@ -101,18 +105,22 @@ while running:
     timer.tick(fps)
     window.fill(colors["white"])
     plat_rect_list = []
+    if not game_over:
+        # Render Actors
+        player.draw(window)
 
-    # Render Actors
-    player.draw(window)
+        for plat in platform_list:
+            plat_rect_list.append(plat.draw(window))
 
-    # Collision Detection
-    player.platform_collision(plat_rect_list)
-    
-    # Remove Platforms that are Off the Screen
-    platform_list = [plat for plat in platform_list if plat.y < screen_height]
 
-    # Update Actors (TODO: Summarize in Function)
-    player.update()
+        # Collision Detection
+        player.platform_collision(plat_rect_list)
+
+        # Update Actors and Check for Game Over (TODO: Summarize in Function)
+        game_over = player.update(screen_width, screen_height)
+
+    if game_over:
+        render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
 
     # Event Handler
     event_handler()
@@ -120,5 +128,5 @@ while running:
     # Update Display
     pygame.display.flip()
 
-
 pygame.quit()
+
