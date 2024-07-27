@@ -80,17 +80,6 @@ def event_handler():
                 player.x_delta -= player.speed
 
 
-# Random Platform Spawn
-def spawn_platform():
-    x = random.randint(0,screen_width-100)
-    y = random.randint(1,50)
-    width = random.randint(50,150)
-    height = 5
-    down_speed = random.randint(1,2)
-    color = random.choice(list(colors.values()))
-    return Platform(x=x,y=y,width=width,height=height,color=color,down_speed=down_speed)
-
-
 # Player
 player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=5, jump_height=20, gravity=1)
 
@@ -105,7 +94,6 @@ platform_list = [platform_1, platform_2, platform_3]
 
 # Game Loop
 running = True
-spawn_timer = 0
 
 while running:
 
@@ -114,18 +102,8 @@ while running:
     window.fill(colors["white"])
     plat_rect_list = []
 
-    # Spawn Platforms at Intervals
-    spawn_timer += 1
-    if spawn_timer >= 60:
-        platform_list.append(spawn_platform())
-        spawn_timer = 0
-
     # Render Actors
     player.draw(window)
-
-    for plat in platform_list:
-        plat.move()
-        plat_rect_list.append(plat.draw(window))
 
     # Collision Detection
     player.platform_collision(plat_rect_list)
