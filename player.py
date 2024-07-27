@@ -30,7 +30,7 @@ class Player(BaseModel):
             self.grounded = False
 
     # Update Player Movement
-    def update(self):
+    def update(self,screen_width, screen_height):
 
         # Check if Player is Grounded
         if self.grounded:
@@ -43,7 +43,20 @@ class Player(BaseModel):
         # Move Player Horizontally
         self.x += self.x_delta
 
+        # Handle wrap-around
+        self.wrap_around(screen_width)
 
+        # Check for falling off the screen
+        if self.y > screen_height:
+            return True
+        return False
+
+        # Wrap Around Logic
+    def wrap_around(self, screen_width):
+        if self.x > screen_width:
+            self.x = -self.width
+        elif self.x + self.width < 0:
+            self.x = screen_width
     # Collision Detection
 
     # Player/Platform Collision
