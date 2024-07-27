@@ -1,6 +1,8 @@
 # Import Modules
 import pygame
+import random
 import time 
+
 # Import Classes
 from player import Player
 from game_platform import Platform
@@ -86,21 +88,14 @@ def event_handler():
                 player.x_delta -= player.speed
 
 
-def render_text(text, font, color, surface, x, y):
-    textobj = font.render(text, True, color)
-    textrect = textobj.get_rect()
-    textrect.center = (x, y)
-    surface.blit(textobj, textrect)
-
-
 # Player
 player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=5, jump_height=20, gravity=1)
 
 # TODO: Create Platform Spawner/List Class
 # Platforms (Temporary)
-platform_1 = Platform(x=1, y=400, width=1000, height=5, color=colors["blue"], down_speed=1)
-platform_2 = Platform(x=400, y=300, width=100, height=5, color=colors["blue"], down_speed=1)
-platform_3 = Platform(x=500, y=200, width=100, height=5, color=colors["blue"], down_speed=1)
+platform_1 = Platform(x=1, y=400, width=1000, height=5, color=colors["blue"], down_speed=1, radius=15)
+platform_2 = Platform(x=400, y=300, width=100, height=5, color=colors["blue"], down_speed=1, radius=10)
+platform_3 = Platform(x=500, y=200, width=100, height=5, color=colors["blue"], down_speed=1, radius=20)
 
 # Platform List (Temporary)
 platform_list = [platform_1, platform_2, platform_3]
@@ -120,6 +115,7 @@ while running:
 
         for plat in platform_list:
             plat_rect_list.append(plat.draw(window))
+
 
         # Collision Detection
         player.platform_collision(plat_rect_list)
