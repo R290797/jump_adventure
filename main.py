@@ -142,7 +142,7 @@ while running:
     render_text(platform_count, font, colors["black"], window, screen_width-715, 50)
 
     # Debug - Show Grounded Status
-    grounded_status = f"coll: {player.grounded}"
+    grounded_status = f"jump: {player.can_jump}"
     render_text(grounded_status, font, colors["black"], window, screen_width-715, 80)
 
     

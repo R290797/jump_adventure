@@ -12,7 +12,6 @@ class Platform(BaseModel):
     color: tuple[int, int, int] = Field(default=(0,0,255))
     vert_speed: int = Field(default=1)
     horz_speed: int = Field(default=0)
-    down_speed: int = Field(default=1)
     radius: PositiveInt = Field(default=10)
    
     # Draw Platform
@@ -24,7 +23,7 @@ class Platform(BaseModel):
 
     # Move Platform Down
     def move(self):
-        self.y += self.down_speed
+        self.y += self.vert_speed
         self.x += self.horz_speed
 
 # TODO: Platform Variations which Inherit from Platform Class

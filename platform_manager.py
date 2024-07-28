@@ -16,7 +16,7 @@ class Platform_Manager(BaseModel):
     # Random Platform Spawn
     def spawn_platform(self,screen_width,colors):
         x = random.randint(0,screen_width)
-        y = random.randint(1,50)
+        y = -10
         width = random.randint(50,150)
         height = 5
         down_speed = random.randint(1,2)
