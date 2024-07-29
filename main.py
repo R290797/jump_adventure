@@ -8,6 +8,8 @@ from game_platform import Platform
 from platform_manager import Platform_Manager
 
 # TODO: From Tutotrial (Update these Later) - Check Requirements
+
+# PYGAME SETUP
 #_______________________________________________________________________________________________________________________
 
 # Initialize Pygame
@@ -16,7 +18,6 @@ pygame.init()
 # Color Dictionary
 colors = {
     "black": (0, 0, 0),
-    "white": (255, 255, 255),
     "red": (255, 0, 0),
     "green": (0, 255, 0),
     "blue": (0, 0, 255),
@@ -29,9 +30,8 @@ colors = {
     "olive": (128, 128, 0),
     "purple": (128, 0, 128)}
 
-# Pygame Configurations
-screen_width = 800
-screen_height = 600
+screen_width = 1000
+screen_height = 700
 fps = 60
 
 # Pygame Tools
@@ -45,8 +45,8 @@ pygame.display.set_caption("Jump Adventure")
 # Font for Game Over Text
 font = pygame.font.SysFont(None, 55)
 
-# Functions
-
+# FUNCTIONS
+#_______________________________________________________________________________________________________________________
 # Event Handler (For User Inputs) TODO: Flatten (Move Movement Functions to Player Class)
 def event_handler():
     global running
@@ -71,6 +71,9 @@ def event_handler():
             if event.key == pygame.K_RIGHT:
                 player.x_delta += player.speed
 
+            if event.key == pygame.K_UP:
+                player.shoot()
+
             if event.key == pygame.K_q:
                 running = False
 
@@ -90,8 +93,13 @@ def render_text(text, font, color, surface, x, y):
     textrect.center = (x, y)
     surface.blit(textobj, textrect)
 
+
+#GAME SETUP
+#_______________________________________________________________________________________________________________________
+
+
 # Creaste Player Object
-player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=5, jump_height=20, gravity=1)
+player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
 
 # TODO: Create Platform Spawner/List Class
 
@@ -108,21 +116,21 @@ while running:
 
     # Pygame Variables
     timer.tick(fps)
-    window.fill(colors["white"])
+    window.fill((255, 255, 255))
     plat_rect_list = []
 
     if not game_over:
         # Render Actors
-        player.draw(window)
+        player.draw_self(window)
 
         # Manage Platforms
-        platform_manager.manage_platforms(window, colors, timer)
+        platform_manager.manage_platforms(window, colors)
 
         # Collision Detection
         player.platform_collision(platform_manager.rect_list)
 
         # Update Actors and Check for Game Over (TODO: Summarize in Function)
-        game_over = player.update(screen_width, screen_height)
+        player.update(window)
 
          # Capture the time at game over 
         if player.player_outofbounds:
@@ -135,15 +143,19 @@ while running:
 
    # Positioned near upper right corner 
     render_text(score_text, font, colors["black"], 
-                window, screen_width-715, 20) 
+                window, screen_width-915, 20) 
     
     # Debug - Show Platform Count
     platform_count = f"Plats: {len(platform_manager.platform_list)}"
-    render_text(platform_count, font, colors["black"], window, screen_width-715, 50)
+    render_text(platform_count, font, colors["black"], window, screen_width-915, 50)
 
     # Debug - Show Grounded Status
     grounded_status = f"jump: {player.can_jump}"
-    render_text(grounded_status, font, colors["black"], window, screen_width-715, 80)
+    render_text(grounded_status, font, colors["black"], window, screen_width-900, 80)
+
+    # Debug - Show Shooting
+    grounded_status = f"Shoot: {time.time() - player.projectile_manager.last_shot > player.projectile_manager.shoot_cooldown}"
+    render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
 
     
     if game_over:

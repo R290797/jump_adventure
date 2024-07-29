@@ -6,7 +6,7 @@ import time
 
 class Platform_Manager(BaseModel):
 
-    spawn_rate: PositiveInt = Field(default=1) # Time between platform spawns
+    spawn_rate: float = Field(default=1.0) # Time between platform spawns
     spawn_time: float = Field(default=time.time()) # Time since last platform spawn
     rect_list: list = Field(default=[])
 
@@ -35,7 +35,7 @@ class Platform_Manager(BaseModel):
             self.rect_list.append(plat.draw(window))
 
     # Update Platform Manager
-    def manage_platforms(self, window, colors, timer):
+    def manage_platforms(self, window, colors):
 
         # Move Platforms
         for plat in self.platform_list:
