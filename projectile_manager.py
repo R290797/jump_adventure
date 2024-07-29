@@ -6,20 +6,20 @@ import time
 class Projectile_Manager(BaseModel):
 
     # Projectile List
-    projectile_list: list[Projectile] = [Projectile]
+    projectile_list: list[Projectile] = Field(default_factory=list)
 
      # Rect List
-    rect_list: list = []
+    rect_list: list = Field(default_factory=list)
 
-    shoot_cooldown: int = Field(default=1)
+    shoot_cooldown: float = Field(default=1)
     last_shot: float = Field(default=time.time())
 
     # Add Projectile
-    def add_projectile(self, x, y, width, height):
+    def add_projectile(self, x, y, width, height, speed):
         
-        # Check if Shoot conditions are met
-        if self.last_shot - time.time() > self.shoot_cooldown:
-            self.projectile_list.append(Projectile(x=x, y=y, width=width, height=height))
+        # Check if Shoot conditions are met (Shoot Condition)
+        if time.time() - self.last_shot > self.shoot_cooldown:
+            self.projectile_list.append(Projectile(x=x, y=y, width=width, height=height, speed=speed))
             self.last_shot = time.time()
 
     # Render Projectiles in List

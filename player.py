@@ -5,14 +5,14 @@ from projectile_manager import Projectile_Manager
 class Player(BaseModel):
 
     # Position Attributes
-    x: PositiveInt
-    y: PositiveInt
+    x: int
+    y: int
     width: PositiveInt
     height: PositiveInt
     color: tuple[int, int, int] = Field(default=(0,255,0))
 
     # Movement Attributes
-    speed: float = Field(default=2.5)
+    speed: int = Field(default=2)
     gravity: PositiveInt = Field(default=1)
     x_delta: int = Field(default=0)
     y_delta: int = Field(default=0)
@@ -26,7 +26,7 @@ class Player(BaseModel):
     grounded_buffer: int = Field(default=10)
 
     # Shooting Mechanic
-    projectile_manager: Projectile_Manager = Projectile_Manager(shoot_cooldown=2)
+    projectile_manager: Projectile_Manager = Projectile_Manager(shoot_cooldown=1)
     
     # Out of Bounds Attributes
     player_outofbounds: bool = Field(default=False)
@@ -47,7 +47,9 @@ class Player(BaseModel):
 
     # Shoot
     def shoot(self):
-        self.projectile_manager.add_projectile(self.x, self.y, 5, 5)
+
+        # Spawn Projectiles at the Center of the  Player
+        self.projectile_manager.add_projectile(self.x + (self.width//2), self.y + (self.height//2), 5, 5, 5)
 
     def check_jump(self):
         if self.grounded_buffer > 0:
@@ -77,6 +79,16 @@ class Player(BaseModel):
         elif self.x + self.width < 0:
             self.x = screen_width
 
+    # Manage Shooting Mechanic
+    def manage_player_attack(self, window):
+
+         # Render Projectiles
+        self.projectile_manager.render_projectiles(window)
+
+        # Manage Projectiles (Movement and Despawning)
+        self.projectile_manager.manage_projectiles(window)
+
+
     # Update Player Movement
     def update(self, window):
 
@@ -86,9 +98,8 @@ class Player(BaseModel):
         # Move Player Horizontally
         self.x += self.x_delta * self.speed
 
-        # Manage Projectiles
-        self.projectile_manager.render_projectiles(window)
-        self.projectile_manager.manage_projectiles(window)
+        # Manage Player Attack (Shooting)
+        self.manage_player_attack(window)
 
         # Handle wrap-around
         self.wrap_around(window.get_width())

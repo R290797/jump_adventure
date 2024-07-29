@@ -35,7 +35,7 @@ class Platform_Manager(BaseModel):
             self.rect_list.append(plat.draw(window))
 
     # Update Platform Manager
-    def manage_platforms(self, window, colors, timer):
+    def manage_platforms(self, window, colors):
 
         # Move Platforms
         for plat in self.platform_list:
