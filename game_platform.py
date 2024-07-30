@@ -28,3 +28,29 @@ class Platform(BaseModel):
 
 # TODO: Platform Variations which Inherit from Platform Class
 # Breaking, Moving, etc. Platforms
+
+#Horizental Platform
+class Horizontal_Platform(Platform):
+    direction : int = Field(default=0)
+    
+    def __init__(self, **data):
+        super().__init__(**data)
+        if self.direction == 0:
+            self.direction = random.choice([1, -1]) 
+                 
+    def move(self):
+        self.x += self.horz_speed * self.direction 
+        if self.x <= 0:
+            self.x = 0
+            self.direction = 1  
+        elif self.x + self.width >= 1000:
+            self.x = 1000 - self.width
+            self.direction = -1 
+        super().move() 
+        
+# Falling Platforms
+class Falling_Platform(Platform):
+    def move(self):
+        self.y += self.vert_speed
+            
+            
