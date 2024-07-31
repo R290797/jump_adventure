@@ -1,11 +1,13 @@
 # Import Modules
 import pygame
 import time
+import random
 
 # Import Classes
 from player import Player
 from game_platform import Platform
 from platform_manager import Platform_Manager
+from boost_items import BoostItem, BoostItemManager
 
 # TODO: From Tutotrial (Update these Later) - Check Requirements
 
@@ -106,6 +108,9 @@ player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3,
 # Create Platform Manager
 platform_manager = Platform_Manager()
 
+# Create Boost Item Manager
+boost_item_manager = BoostItemManager(screen_width, screen_height, player)
+
 # Game Loop
 running = True
 game_over = False
@@ -131,6 +136,14 @@ while running:
 
         # Update Actors and Check for Game Over (TODO: Summarize in Function)
         player.update(window)
+
+        # Spawn items at random intervals
+        if random.random() < 0.01:  # Adjust frequency as needed
+            boost_item_manager.spawn_item()
+
+        # Update and draw boost items
+        boost_item_manager.update_items()
+        boost_item_manager.draw_items(window)
 
          # Capture the time at game over 
         if player.player_outofbounds:

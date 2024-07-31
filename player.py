@@ -1,6 +1,7 @@
 import pygame
-from pydantic import BaseModel, Field, PositiveInt
+from pydantic import BaseModel, Field, PositiveInt,  ConfigDict
 from projectile_manager import Projectile_Manager
+from boosts import Parachute, Shield, DoubleJump
 
 class Player(BaseModel):
 
@@ -21,6 +22,7 @@ class Player(BaseModel):
     grounded: bool = Field(default=False)
     can_jump: bool = Field(default=True)
     jump_height: PositiveInt = Field(default=10)
+    double_jump_active: bool = Field(default=False)
 
     # Grounded Buffer (Prevents inconsistent collision detection)
     grounded_buffer: int = Field(default=10)
@@ -30,6 +32,18 @@ class Player(BaseModel):
     
     # Out of Bounds Attributes
     player_outofbounds: bool = Field(default=False)
+
+     # Boost-Up Effects
+    parachute: Parachute = None
+    shield: Shield = None
+    double_jump: DoubleJump = None
+    shield_active: bool = Field(default=False)
+    extra_jump: bool = False  # For double jump tracking
+
+     # Configuration to allow arbitrary types
+    class Config:
+        arbitrary_types_allowed = True
+
  
     # Draw Player (And Return Rect. for Collision Detection)
     def draw_self(self, window):
@@ -40,10 +54,13 @@ class Player(BaseModel):
     # Jump
     def jump(self):
 
-        if self.can_jump:
-            self.y_delta -= self.jump_height
+        if self.can_jump or (self.double_jump_active and not self.extra_jump):
+            self.y_delta = -self.jump_height  
             self.grounded = False
-            self.can_jump = False
+            if self.can_jump:
+                self.can_jump = False
+            elif self.double_jump_active:
+                self.extra_jump = True
 
     # Shoot
     def shoot(self):
@@ -132,5 +149,22 @@ class Player(BaseModel):
                     # Set Player Grounded
                     self.grounded = True
                     break
-            
-                
+
+    # Collect Boosts
+    def collect_parachute(self):
+        if not self.parachute:
+            self.parachute = Parachute(self)
+        self.parachute.activate()
+
+    def collect_shield(self):
+        if not self.shield:
+            self.shield = Shield(self)
+        self.shield.activate()
+
+    def collect_double_jump(self):
+        if not self.double_jump:
+            self.double_jump = DoubleJump(self)
+        self.double_jump.activate()        
+
+    def get_rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)            
