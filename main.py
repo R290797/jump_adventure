@@ -106,7 +106,7 @@ player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3,
 platform_manager = Platform_Manager()
 
 # Create Enemy Manager
-enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y)
+enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y, spawn_rate=5.0)
 
 # Game Loop
 running = True
@@ -136,7 +136,7 @@ while running:
         player.enemy_collision(enemy_manager)
 
         # Update Actors and Check for Game Over (TODO: Summarize in Function)
-        player.update(window)
+        player.update(window, enemy_manager)
 
          # Capture the time at game over 
         if player.player_outofbounds:

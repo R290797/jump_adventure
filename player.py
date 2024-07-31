@@ -83,17 +83,17 @@ class Player(BaseModel):
             self.x = screen_width
 
     # Manage Shooting Mechanic
-    def manage_player_attack(self, window):
+    def manage_player_attack(self, window: pygame.surface, enemy_manager: Enemy_Manager):
 
          # Render Projectiles
         self.projectile_manager.render_projectiles(window)
 
         # Manage Projectiles (Movement and Despawning)
-        self.projectile_manager.manage_projectiles(window)
+        self.projectile_manager.manage_projectiles(window, enemy_manager)
 
 
     # Update Player Movement
-    def update(self, window):
+    def update(self, window: pygame.surface, enemy_manager: Enemy_Manager):
 
         # Grounded Check
         self.check_grounded()
@@ -102,7 +102,7 @@ class Player(BaseModel):
         self.x += self.x_delta * self.speed
 
         # Manage Player Attack (Shooting)
-        self.manage_player_attack(window)
+        self.manage_player_attack(window, enemy_manager)
 
         # Handle wrap-around
         self.wrap_around(window.get_width())
