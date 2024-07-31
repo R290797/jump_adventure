@@ -1,4 +1,4 @@
-from game_platform import Platform
+from game_platform import Platform, Horizontal_Platform, Falling_Platform
 from pydantic import BaseModel, Field, PositiveInt
 import random
 import time
@@ -15,13 +15,22 @@ class Platform_Manager(BaseModel):
 
     # Random Platform Spawn
     def spawn_platform(self,screen_width,colors):
-        x = random.randint(0,screen_width)
+        x = random.randint(0,screen_width -150)
         y = -10
         width = random.randint(50,150)
         height = 5
-        down_speed = random.randint(1,2)
+        vert_speed = 1
+        horz_speed = random.randint(1, 5) 
         color = random.choice(list(colors.values()))
-        return Platform(x=x,y=y,width=width,height=height,color=color,down_speed=down_speed)
+        
+        platform_type = random.choice([Platform, Horizontal_Platform, Falling_Platform]) 
+
+        if platform_type == Horizontal_Platform:
+            return Horizontal_Platform(x=x, y=y, width=width, height=height, color=color, horz_speed=horz_speed, direction=random.choice([-1, 1]))
+        elif platform_type == Falling_Platform:
+            return Falling_Platform(x=x, y=y, width=width, height=height, color=color, vert_speed=vert_speed)
+        else:
+            return Platform(x=x, y=y, width=width, height=height, color=color, vert_speed=vert_speed)
     
     # Render Platforms
     def render_platforms(self,window):
@@ -44,9 +53,9 @@ class Platform_Manager(BaseModel):
         # Render Platforms
         self.render_platforms(window)
         
-        # Spawn Platform at Spawn Rate Intervals (TODO: Add Platform Variations)
+        # Spawn Platform at Spawn Rate Intervals (TODO: Add Platform Variations - Done)
         if time.time() - self.spawn_time > self.spawn_rate:
-            self.platform_list.append(self.spawn_platform(window.get_height() + -10 ,colors))
+            self.platform_list.append(self.spawn_platform(window.get_width(), colors))
 
             # Reset Spawn Time
             self.spawn_time = time.time()

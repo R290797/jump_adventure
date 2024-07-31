@@ -24,7 +24,29 @@ class Platform(BaseModel):
     # Move Platform Down
     def move(self):
         self.y += self.vert_speed
-        self.x += self.horz_speed
+
 
 # TODO: Platform Variations which Inherit from Platform Class
 # Breaking, Moving, etc. Platforms
+
+#Horizontal Platform
+class Horizontal_Platform(Platform):
+    direction : int = Field(default=0)
+    
+    #Horizontal Platform Chaning Direction             
+    def move(self):
+        self.x += self.horz_speed * self.direction 
+        if self.x <= 0:
+            self.x = 0
+            self.direction = 1  
+        elif self.x + self.width >= 1000:
+            self.x = 1000 - self.width
+            self.direction = -1 
+        super().move() 
+        
+# Falling Platforms
+class Falling_Platform(Platform):
+    def move(self):
+        self.y += self.vert_speed
+            
+            
