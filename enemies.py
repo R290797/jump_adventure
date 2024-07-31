@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field, PositiveInt
-from player import Player
 import pygame
 import random
 
@@ -17,12 +16,23 @@ class Base_Enemy(BaseModel):
     horz_speed: int = Field(default=1)
     direction: int = random.choice([-1,1])
 
+    # Status Attributes
+    alive: bool = Field(default = True)
+
     # Draw the Enemy, Return Rect object for Collision Calculations
     def draw(self, screen: pygame.Surface) -> pygame.rect:
         return pygame.draw.rect(screen, self.color, (self.x, self.y, self.width, self.height))
+    
+    # Check if "Alive Conditions" of enemy are met, if not, return false
+    def out_of_bounds_check(self, screen: pygame.surface):
+
+        # If enemy Leaves Screen, Set alive to False
+        if self.y > screen.get_height() + 30:
+            self.alive = False
+
 
     # Movement of the Enemy (Base Movement is Bouncing/Left Right and constantly moving Down)
-    def move(self, player: Player, screen: pygame.Surface):
+    def move(self, screen, x_pos=None, y_pos=None):
 
         # Move Enemy Down
         self.y += self.vert_speed
@@ -32,4 +42,7 @@ class Base_Enemy(BaseModel):
             self.direction *= -1
 
         self.x += self.horz_speed * self.direction
+
+        # Check if Enemy is Out of Bounds
+        self.out_of_bounds_check(screen)
 

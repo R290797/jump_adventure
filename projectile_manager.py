@@ -11,6 +11,7 @@ class Projectile_Manager(BaseModel):
      # Rect List
     rect_list: list = Field(default_factory=list)
 
+    # Cooldown/Shot Logic Attributes
     shoot_cooldown: float = Field(default=1)
     last_shot: float = Field(default=time.time())
 

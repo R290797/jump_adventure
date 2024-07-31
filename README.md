@@ -13,12 +13,21 @@ Shooting to Kill
 Kill the Player
 Jump on Enemy to Kill
 
-
 - To Dos --> 
 Add Return types to Functions
 Add Type Description to Function Parameters
 Change Platform Screen Dimension to dynamic (not Hard Coded)
 Make Player Move with Horizontal Platforms
+
+--> POINTS FOR KILLING ENEMIES
+
+Dynamic Challenge:
+Increase Points Gained Per Second
+Decrease Platform Spawns (to a Limit)
+Increase Platform Speed (to a limit)
+Increase Enemy Spawns (to a Limit)
+Increase Enemy Speed (To a Limit)
+
 
 
 Test to Write:
