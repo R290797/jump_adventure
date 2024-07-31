@@ -23,7 +23,10 @@ class Platform_Manager(BaseModel):
         horz_speed = random.randint(1, 5) 
         color = random.choice(list(colors.values()))
         
-        platform_type = random.choice([Platform, Horizontal_Platform, Falling_Platform]) 
+        platform_type = random.choices(
+            [Platform,Horizontal_Platform,Falling_Platform],
+            [0.4, 0.3, 0.3]
+        )[0]
 
         if platform_type == Horizontal_Platform:
             return Horizontal_Platform(x=x, y=y, width=width, height=height, color=color, horz_speed=horz_speed, direction=random.choice([-1, 1]))
