@@ -6,6 +6,8 @@ import time
 from player import Player
 from game_platform import Platform
 from platform_manager import Platform_Manager
+from enemies import Base_Enemy
+
 
 # TODO: From Tutotrial (Update these Later) - Check Requirements
 
@@ -98,8 +100,11 @@ def render_text(text, font, color, surface, x, y):
 #_______________________________________________________________________________________________________________________
 
 
-# Creaste Player Object
+# Create Player Object
 player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
+
+# Temp Enemy
+enemy = Base_Enemy(x=300,y=10, vert_speed=0, horz_speed=5)
 
 # TODO: Create Platform Spawner/List Class
 
@@ -122,6 +127,9 @@ while running:
     if not game_over:
         # Render Actors
         player.draw_self(window)
+
+        enemy.draw(window)
+        enemy.move(player, window)
 
         # Manage Platforms
         platform_manager.manage_platforms(window, colors)

@@ -34,7 +34,7 @@ class Player(BaseModel):
     # Draw Player (And Return Rect. for Collision Detection)
     def draw_self(self, window):
 
-        # Draw Player Rectangle
+        # Draw Player Rectangle and Return Rect
         return pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
            
     # Jump
