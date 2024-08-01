@@ -140,73 +140,73 @@ while running:
             menu_active = False
             
     else:
-       # Pygame Variables
-      timer.tick(fps)
-      window.fill((255, 255, 255))
-      plat_rect_list = []
+        # Pygame Variables
+        timer.tick(fps)
+        window.fill((255, 255, 255))
+        plat_rect_list = []
 
-          if not game_over:
-              # Render Actors
-              player.draw_self(window)
+        if not game_over:
+            # Render Actors
+            player.draw_self(window)
 
-              # Manage Platforms
-              platform_manager.manage_platforms(window, colors)
+            # Manage Platforms
+            platform_manager.manage_platforms(window, colors)
 
-              # Manage Enemies
-              enemy_manager.manage_enemies(window)
+            # Manage Enemies
+            enemy_manager.manage_enemies(window)
 
-              # Update Player position for Enemey Location
-              enemy_manager.player_x = player.x + (player.width//2)
-              enemy_manager.player_y = player.y + (player.height//2)
+            # Update Player position for Enemey Location
+            enemy_manager.player_x = player.x + (player.width//2)
+            enemy_manager.player_y = player.y + (player.height//2)
 
-              # Collision Detection
-              player.platform_collision(platform_manager.rect_list)
-              player.enemy_collision(enemy_manager)
+            # Collision Detection
+            player.platform_collision(platform_manager.rect_list)
+            player.enemy_collision(enemy_manager)
 
-              # Update Actors and Check for Game Over (TODO: Summarize in Function)
-              player.update(window, enemy_manager)
+            # Update Actors and Check for Game Over (TODO: Summarize in Function)
+            player.update(window, enemy_manager)
 
-              # Spawn items at random intervals
-              if random.random() < 0.01:  # Adjust frequency as needed
-                  boost_item_manager.spawn_item()
+            # Spawn items at random intervals
+            if random.random() < 0.01:  # Adjust frequency as needed
+                boost_item_manager.spawn_item()
 
-              # Update and draw boost items
-              boost_item_manager.update_items()
-              boost_item_manager.draw_items(window)
+            # Update and draw boost items
+            boost_item_manager.update_items()
+            boost_item_manager.draw_items(window)
 
-               # Capture the time at game over 
-              if not player.alive:
-                  final_time = time.time() - start_time
-                  game_over = True
+            # Capture the time at game over 
+            if not player.alive:
+                final_time = time.time() - start_time
+                game_over = True
 
-          # Display the Timer/Score
-          elapsed_time = final_time if game_over else time.time() - start_time
-          score_text = f"Score: {int(elapsed_time)}"
+        # Display the Timer/Score
+        elapsed_time = final_time if game_over else time.time() - start_time
+        score_text = f"Score: {int(elapsed_time)}"
 
-         # Positioned near upper right corner 
-          render_text(score_text, font, colors["black"], 
-                      window, screen_width-915, 20) 
+        # Positioned near upper right corner 
+        render_text(score_text, font, colors["black"], 
+                    window, screen_width-915, 20) 
 
-          # Debug - Show Grounded Status
-          grounded_status = f"jump: {player.can_jump}"
-          render_text(grounded_status, font, colors["black"], window, screen_width-900, 50)
+        # Debug - Show Grounded Status
+        grounded_status = f"jump: {player.can_jump}"
+        render_text(grounded_status, font, colors["black"], window, screen_width-900, 50)
 
-          # Debug - Show Shooting
-          grounded_status = f"Shoot: {time.time() - player.projectile_manager.last_shot > player.projectile_manager.shoot_cooldown}"
-          render_text(grounded_status, font, colors["black"], window, screen_width-900, 80)
+        # Debug - Show Shooting
+        grounded_status = f"Shoot: {time.time() - player.projectile_manager.last_shot > player.projectile_manager.shoot_cooldown}"
+        render_text(grounded_status, font, colors["black"], window, screen_width-900, 80)
 
-          # Debug - Show Enemy Count
-          grounded_status = f"Enemies: {len(enemy_manager.enemy_list)}"
-          render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
+        # Debug - Show Enemy Count
+        grounded_status = f"Enemies: {len(enemy_manager.enemy_list)}"
+        render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
 
-          if game_over:
-              render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
+        if game_over:
+            render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
 
-        # Event Handler
-        event_handler(menu_active)  
+    # Event Handler
+    event_handler(menu_active)  
 
-        # Update Display
-        pygame.display.flip()
+    # Update Display
+    pygame.display.flip()
 
 
 pygame.quit()
