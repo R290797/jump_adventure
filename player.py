@@ -18,6 +18,7 @@ class Player(BaseModel):
     # Sounds Effects
     power_sound : pygame.mixer.Sound
     hit_sound: pygame.mixer.Sound
+    break_sound: pygame.mixer.Sound
 
     # Movement Attributes
     speed: int = Field(default=2)
@@ -190,7 +191,9 @@ class Player(BaseModel):
 
                 if not self.last_touch_type == "disappearing" and plat.first_touch == True:
             
-                    plat.set_out_of_bounds()
+                    self.break_sound.play()
+                    platform_manager.platform_list.remove(plat)
+                    
 
 
     # Player/Platform Collision
