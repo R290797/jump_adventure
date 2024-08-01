@@ -46,6 +46,6 @@ class Horizontal_Platform(Platform):
 # Falling Platforms
 class Falling_Platform(Platform):
     def move(self):
-        self.y += self.vert_speed
+        self.y += self.vert_speed*2
             
 # Disapearing Platforms            

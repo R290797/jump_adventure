@@ -2,10 +2,12 @@ from game_platform import Platform, Horizontal_Platform, Falling_Platform
 from pydantic import BaseModel, Field, PositiveInt
 import random
 import time
+import pygame
 
 
 class Platform_Manager(BaseModel):
 
+    # Spawn Attributes
     spawn_rate: float = Field(default=1.0) # Time between platform spawns
     spawn_time: float = Field(default=time.time()) # Time since last platform spawn
     rect_list: list = Field(default=[])
