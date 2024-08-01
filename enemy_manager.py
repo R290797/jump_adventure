@@ -17,7 +17,7 @@ class Enemy_Manager(BaseModel):
     rect_list: list = Field(default_factory=list)
 
     # Spawn Attributes
-    spawn_rate: float = Field(default=10.0) # Time between Enemy spawns (in Seconds)
+    spawn_rate: float = Field(default=15.0) # Time between Enemy spawns (in Seconds)
     spawn_time: float = Field(default=time.time()) # Time since last Enemy spawn
  
 
