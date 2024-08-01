@@ -228,20 +228,20 @@ class Player(BaseModel):
     def enemy_collision(self, enemy_manager: Enemy_Manager): 
 
         # Iterate Rects (Go by Index to Find According enemy in Enemy List)
-        for i in range(len(enemy_manager.rect_list)):
+        for enemy in enemy_manager.enemy_list:
 
             # Check if Player Collides With Enemy (On the Bottom half)
-            if enemy_manager.rect_list[i].colliderect(self.x, self.y + (2 * self.height //3), self.width, self.height //3):
+            if enemy.get_rect().colliderect(self.x, self.y + (2 * self.height //3), self.width, self.height //3):
 
                 # Destroy that Enemy (Set Alive to False)
-                enemy_manager.enemy_list[i].alive = False
+                enemy.alive = False
                 self.hit_sound.play()
                 
                 # Make Player Jump
                 self.y_delta = -self.jump_height
 
             # If Collides with top 2/3 of Player, Lose the Game
-            elif enemy_manager.rect_list[i].colliderect(self.x, self.y, self.width, 2 * self.height //3) and enemy_manager.enemy_list[i].alive:
+            elif enemy.get_rect().colliderect(self.x, self.y, self.width, 2 * self.height //3) and enemy.alive:
                 self.alive = False
 
     # Boost Mechanic Functions (Collision and Collecting)
