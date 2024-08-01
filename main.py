@@ -130,6 +130,10 @@ while running:
 
         # Manage Enemies
         enemy_manager.manage_enemies(window)
+        
+        # Update Player position for Enemey Location
+        enemy_manager.player_x = player.x + (player.width//2)
+        enemy_manager.player_y = player.y + (player.height//2)
 
         # Collision Detection
         player.platform_collision(platform_manager.rect_list)
@@ -163,8 +167,6 @@ while running:
     grounded_status = f"Enemies: {len(enemy_manager.enemy_list)}"
     render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
 
-
-    
     if game_over:
         render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
 

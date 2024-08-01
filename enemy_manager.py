@@ -1,4 +1,4 @@
-from enemies import Base_Enemy
+from enemies import Base_Enemy, Bouncing_Enemy, Chasing_Enemy
 from pydantic import BaseModel, Field, PositiveInt
 
 import pygame
@@ -40,7 +40,7 @@ class Enemy_Manager(BaseModel):
             # TODO: Add Enemy Variations here
 
             # Place Enemy above the Top of the Screen
-            self.enemy_list.append(Base_Enemy(y=-50, x=random.randint(0,screen.get_width())))
+            self.enemy_list.append(Chasing_Enemy(y=-50, x=random.randint(0,screen.get_width())))
 
             # Reset Timer
             self.spawn_time = time.time()
@@ -63,7 +63,7 @@ class Enemy_Manager(BaseModel):
         
         # Move Enemies in Enemy List
         for enemy in self.enemy_list:
-            enemy.move(screen)
+            enemy.move(screen, px_pos=self.player_x, py_pos=self.player_y)
 
         # Render Enemies
         self.render_enemies(screen)
