@@ -26,7 +26,6 @@ class BoostEffect(ABC):
     def remove_effect(self):
         pass
 
-
 class Parachute(BoostEffect):
     def apply_effect(self):
         # Reduce the player's gravity more significantly to slow down falling

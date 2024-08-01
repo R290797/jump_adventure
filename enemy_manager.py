@@ -17,7 +17,7 @@ class Enemy_Manager(BaseModel):
     rect_list: list = Field(default_factory=list)
 
     # Spawn Attributes
-    spawn_rate: float = Field(default=10.0) # Time between Enemy spawns (in Seconds)
+    spawn_rate: float = Field(default=15.0) # Time between Enemy spawns (in Seconds)
     spawn_time: float = Field(default=time.time()) # Time since last Enemy spawn
  
 
@@ -39,8 +39,11 @@ class Enemy_Manager(BaseModel):
         if time.time() - self.spawn_time > self.spawn_rate:
             # TODO: Add Enemy Variations here
 
+            # Spawn Random Enemy in intervals
+            enemy_type = random.choice([Base_Enemy, Chasing_Enemy, Bouncing_Enemy])
+
             # Place Enemy above the Top of the Screen
-            self.enemy_list.append(Chasing_Enemy(y=-50, x=random.randint(0,screen.get_width())))
+            self.enemy_list.append(enemy_type(y=-50, x=random.randint(0,screen.get_width())))
 
             # Reset Timer
             self.spawn_time = time.time()
