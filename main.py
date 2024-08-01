@@ -51,9 +51,9 @@ pygame.display.set_caption("Jump Adventure")
 
 # Background Objects
 background_1 = Background(y=0, path="Resources/Sprites/Sprite-background_1.png", screen=window, moving=False)
-background_2 = Background(y=700, path="Resources/Sprites/Sprite-background_2.png", screen=window, moving=False)
-background_3 = Background(y=1400, path="Resources/Sprites/Sprite-background_3.png", screen=window, moving=False)
-background_list = [background_2, background_3, background_1]
+background_2 = Background(y=-700, path="Resources/Sprites/Sprite-background_2.png", screen=window, moving=False)
+background_3 = Background(y=700, path="Resources/Sprites/Sprite-background_3.png", screen=window, moving=False)
+background_list = [background_1, background_2, background_3]
 
 # Font Variables
 font = pygame.font.SysFont(None, 55)
@@ -203,7 +203,7 @@ def render_game_images(screen: pygame.surface):
 menu = Menu(window, font, colors) 
 
 # Create Player Object
-player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=40, color=colors["green"], speed=3, jump_height=20, gravity=1)
+player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=60, color=colors["green"], speed=3, jump_height=20, gravity=1)
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
