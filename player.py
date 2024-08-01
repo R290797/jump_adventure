@@ -51,7 +51,7 @@ class Player(BaseModel):
     # Sounds Effects
     power_sound : pygame.mixer.Sound
 
-     # Configuration to allow arbitrary types
+    # Configuration to allow arbitrary types
     class Config:
         arbitrary_types_allowed = True
 

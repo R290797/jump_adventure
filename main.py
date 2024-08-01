@@ -276,8 +276,6 @@ def init_new_game(menu_status: bool):
 
 while running:
 
-    
-  
     # Handle Menu Actions
     if menu.active:
         for event in pygame.event.get():
