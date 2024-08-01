@@ -240,11 +240,6 @@ def render_game_images(screen: pygame.surface):
     # Render Projectiles
     render_projectile_images(window)
 
-    
-
-# Rendering Background Image
-
-
 
 #GAME SETUP
 #_______________________________________________________________________________________________________________________
@@ -269,12 +264,14 @@ running = True
 game_over = False
 start_time = time.time()
 final_time = 0  
+level = 1
+level_time = time.time()
 
 # Function to Reset / Start the Game
 def init_new_game(menu_status: bool):
 
     # Get Global Variables
-    global menu, game_over, start_time, final_time, player, platform_manager, enemy_manager, boost_item_manager
+    global menu, game_over, start_time, final_time, level, player, platform_manager, enemy_manager, boost_item_manager, level_time
 
     # Return to Menu or not
     if menu_status:
@@ -284,10 +281,29 @@ def init_new_game(menu_status: bool):
     game_over = False
     start_time = time.time()
     final_time = 0
+    level = 1
+    level_time = time.time()
     player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=60, color=colors["green"], speed=3, jump_height=20, gravity=1, power_sound=power_sound, hit_sound=hit_sound, break_sound=break_sound)
     platform_manager = Platform_Manager()
     enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y)
     boost_item_manager = BoostItemManager(screen_width, screen_height, player)
+
+# Function to Increase the Level
+def increase_level():
+    global level, enemy_manager, platform_manager, start_time, level_time
+
+    # Every 20 Seconds, Increase Level by One
+    if time.time() - level_time > 10.0:
+        level_time = time.time()
+        level += 1
+
+        # Increment Platform and Enemy Manager
+        platform_manager.increment_difficulty(level)
+        enemy_manager.increment_difficulty(level)
+
+    
+
+
 
 while running:
 
@@ -343,6 +359,9 @@ while running:
             boost_item_manager.update_items()
             boost_item_manager.draw_items(window)
 
+            # Increase Level (Dynamic Scaling)
+            increase_level()
+
             # Capture the time at game over 
             if not player.alive:
                 final_time = time.time() - start_time
@@ -355,25 +374,18 @@ while running:
         # Display the Timer/Score
         elapsed_time = final_time if game_over else time.time() - start_time
         score_text = f"Score: {int(elapsed_time)}"
+        level_text = f"Level: {level}"
 
         # Positioned near upper right corner 
         render_text(score_text, font, colors["black"], 
                     window, screen_width-915, 20) 
-
-        # Debug - Show Grounded Status
-        grounded_status = f"jump: {player.can_jump}"
-        render_text(grounded_status, font, colors["black"], window, screen_width-900, 50)
-
-        # Debug - Show Shooting
-        grounded_status = f"Shoot: {time.time() - player.projectile_manager.last_shot > player.projectile_manager.shoot_cooldown}"
-        render_text(grounded_status, font, colors["black"], window, screen_width-900, 80)
+        
+        render_text(level_text, font, colors["black"],
+                    window, screen_width-915, 50)
 
         # Debug - Show Enemy Count
         grounded_status = f"Enemies: {len(enemy_manager.enemy_list)}"
         render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
-
-        last_touch = f"LT: {player.last_touch_type}"
-        render_text(last_touch, font, colors["black"], window, screen_width-900, 150)
 
         last_touch = f"plats: {len(platform_manager.platform_list)}"
         render_text(last_touch, font, colors["black"], window, screen_width-900, 180)
