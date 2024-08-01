@@ -15,6 +15,11 @@ class Player(BaseModel):
     height: PositiveInt
     color: tuple[int, int, int] = Field(default=(0,255,0))
 
+    # Sounds Effects
+    power_sound : pygame.mixer.Sound
+    hit_sound: pygame.mixer.Sound
+    break_sound: pygame.mixer.Sound
+
     # Movement Attributes
     speed: int = Field(default=2)
     gravity: PositiveInt = Field(default=1)
@@ -48,9 +53,6 @@ class Player(BaseModel):
     shield_active: bool = Field(default=False)
     extra_jump: bool = False  # For double jump tracking
     
-    # Sounds Effects
-    power_sound : pygame.mixer.Sound
-
     # Configuration to allow arbitrary types
     class Config:
         arbitrary_types_allowed = True
@@ -76,7 +78,7 @@ class Player(BaseModel):
     def shoot(self):
 
         # Spawn Projectiles at the Center of the  Player
-        self.projectile_manager.add_projectile(int(self.x + (self.width//2) - 5), int(self.y + (self.height//2)), 25, 20, 5)
+        self.projectile_manager.add_projectile(int(self.x + (self.width//2) - 5), int(self.y + (self.height//2)), 25, 20, 5, self.hit_sound)
 
     # Check if Player is Grounded (and Apply Gravity)
     def check_grounded(self):
@@ -171,8 +173,7 @@ class Player(BaseModel):
         if platform.type == "disappearing":
             platform.set_first_touch()
 
-            
-
+    
     # Apply interactions with Platforms
     def platform_interactions(self, platform: Platform):
 
@@ -190,7 +191,9 @@ class Player(BaseModel):
 
                 if not self.last_touch_type == "disappearing" and plat.first_touch == True:
             
-                    plat.set_out_of_bounds()
+                    self.break_sound.play()
+                    platform_manager.platform_list.remove(plat)
+                    
 
 
     # Player/Platform Collision
@@ -225,19 +228,20 @@ class Player(BaseModel):
     def enemy_collision(self, enemy_manager: Enemy_Manager): 
 
         # Iterate Rects (Go by Index to Find According enemy in Enemy List)
-        for i in range(len(enemy_manager.rect_list)):
+        for enemy in enemy_manager.enemy_list:
 
             # Check if Player Collides With Enemy (On the Bottom half)
-            if enemy_manager.rect_list[i].colliderect(self.x, self.y + (2 * self.height //3), self.width, self.height //3):
+            if enemy.get_rect().colliderect(self.x, self.y + (2 * self.height //3), self.width, self.height //3):
 
                 # Destroy that Enemy (Set Alive to False)
-                enemy_manager.enemy_list[i].alive = False
+                enemy.alive = False
+                self.hit_sound.play()
                 
                 # Make Player Jump
                 self.y_delta = -self.jump_height
 
             # If Collides with top 2/3 of Player, Lose the Game
-            elif enemy_manager.rect_list[i].colliderect(self.x, self.y, self.width, 2 * self.height //3) and enemy_manager.enemy_list[i].alive:
+            elif enemy.get_rect().colliderect(self.x, self.y, self.width, 2 * self.height //3) and enemy.alive:
                 self.alive = False
 
     # Boost Mechanic Functions (Collision and Collecting)

@@ -16,12 +16,16 @@ class Projectile_Manager(BaseModel):
     shoot_cooldown: float = Field(default=1)
     last_shot: float = Field(default=time.time())
 
+    # Configuration to allow arbitrary types
+    class Config:
+        arbitrary_types_allowed = True
+
     # Add Projectile
-    def add_projectile(self, x, y, width, height, speed):
+    def add_projectile(self, x, y, width, height, speed, hit_sound):
         
         # Check if Shoot conditions are met (Shoot Condition)
         if time.time() - self.last_shot > self.shoot_cooldown:
-            self.projectile_list.append(Projectile(x=x, y=y, width=width, height=height, speed=speed))
+            self.projectile_list.append(Projectile(x=x, y=y, width=width, height=height, speed=speed, hit_sound=hit_sound))
             self.last_shot = time.time()
 
     # Render Projectiles in List

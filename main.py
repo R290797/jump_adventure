@@ -14,7 +14,7 @@ from menu import Menu
 from background import Background
 
 
-# TODO: From Tutotrial (Update these Later) - Check Requirements
+# Code Inspired by:
 
 # PYGAME SETUP
 #_______________________________________________________________________________________________________________________
@@ -70,6 +70,8 @@ jump_sound = pygame.mixer.Sound("SoundEffects/Jump-SoundEffect.wav") # Royalty F
 shoot_sound = pygame.mixer.Sound("SoundEffects/Shoot-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
 power_sound = pygame.mixer.Sound("SoundEffects/PowerUp-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
 game_over_sound = pygame.mixer.Sound("SoundEffects/GameOver-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+hit_sound = pygame.mixer.Sound("Resources/Sounds/EnemyImpact-SoundEffect.wav")
+break_sound = pygame.mixer.Sound("Resources/Sounds/WoodHit-SoundEffect.wav")
 
     # Load Game Play Music
 game_play_music = "SoundEffects/GamePlay-SoundEffect.mp3" # Royalty Free Music: https://www.bensound.com/
@@ -251,7 +253,7 @@ def render_game_images(screen: pygame.surface):
 menu = Menu(window, font, colors) 
 
 # Create Player Object
-player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=60, color=colors["green"], speed=3, jump_height=20, gravity=1, power_sound=power_sound)
+player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=60, color=colors["green"], speed=3, jump_height=20, gravity=1, power_sound=power_sound, hit_sound=hit_sound, break_sound=break_sound)
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
@@ -282,7 +284,7 @@ def init_new_game(menu_status: bool):
     game_over = False
     start_time = time.time()
     final_time = 0
-    player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=60, color=colors["green"], speed=3, jump_height=20, gravity=1, power_sound=power_sound)
+    player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=60, color=colors["green"], speed=3, jump_height=20, gravity=1, power_sound=power_sound, hit_sound=hit_sound, break_sound=break_sound)
     platform_manager = Platform_Manager()
     enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y)
     boost_item_manager = BoostItemManager(screen_width, screen_height, player)

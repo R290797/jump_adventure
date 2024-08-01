@@ -48,6 +48,10 @@ class Base_Enemy(BaseModel):
         # Check if Enemy is Out of Bounds
         self.out_of_bounds_check(screen)
 
+    # Function to Get Collision Rect
+    def get_rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+
 
 # Enemy Variants
 

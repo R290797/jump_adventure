@@ -76,6 +76,3 @@ class Disappearing_Platform(Platform):
     def set_first_touch(self):
         self.first_touch = True
 
-    # Set X out of Bounds (To Avoid List Index Problems)
-    def set_out_of_bounds(self):
-        self.x = -1000
