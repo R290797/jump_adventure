@@ -194,6 +194,21 @@ def render_projectile_images(screen: pygame.surface):
         proj_image = pygame.transform.scale(proj_image, (proj.width, proj.height))
         screen.blit(proj_image, (proj.x, proj.y))
 
+def render_boost_images(screen: pygame.surface):
+    global boost_item_manager
+    temp_image = None
+
+    image_path_dict = {"parachute": "Resources/Sprites/Sprite-parachute_powerup.png",
+                       "double_jump": "Resources/Sprites/Sprite-double_jump_powerup.png",
+                       "shield": "Resources/Sprites/Sprite-shield_powerup.png"}
+    
+    for boost in boost_item_manager.items:
+
+        # Load Images and Scale
+        temp_image = pygame.image.load(image_path_dict[boost.boost_type])
+        temp_image = pygame.transform.scale(temp_image, (boost.width, boost.height))
+        screen.blit(temp_image, (boost.x, boost.y))
+
 
 # Render Moving Backround
 def render_background(game_over: bool):
@@ -216,6 +231,9 @@ def render_game_images(screen: pygame.surface):
 
     # Render Enemies
     render_enemy_images(window)
+
+    # Render Boost Images
+    render_boost_images(window)
 
     # Render Projectiles
     render_projectile_images(window)
