@@ -4,8 +4,9 @@ import time
 
 # Import Classes
 from player import Player
-from game_platform import Platform
 from platform_manager import Platform_Manager
+from enemy_manager import Enemy_Manager
+
 
 # TODO: From Tutotrial (Update these Later) - Check Requirements
 
@@ -98,13 +99,14 @@ def render_text(text, font, color, surface, x, y):
 #_______________________________________________________________________________________________________________________
 
 
-# Creaste Player Object
+# Create Player Object
 player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
-
-# TODO: Create Platform Spawner/List Class
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
+
+# Create Enemy Manager
+enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y, spawn_rate=5.0)
 
 # Game Loop
 running = True
@@ -126,14 +128,22 @@ while running:
         # Manage Platforms
         platform_manager.manage_platforms(window, colors)
 
+        # Manage Enemies
+        enemy_manager.manage_enemies(window)
+        
+        # Update Player position for Enemey Location
+        enemy_manager.player_x = player.x + (player.width//2)
+        enemy_manager.player_y = player.y + (player.height//2)
+
         # Collision Detection
         player.platform_collision(platform_manager.rect_list)
+        player.enemy_collision(enemy_manager)
 
         # Update Actors and Check for Game Over (TODO: Summarize in Function)
-        player.update(window)
+        player.update(window, enemy_manager)
 
          # Capture the time at game over 
-        if player.player_outofbounds:
+        if not player.alive:
             final_time = time.time() - start_time
             game_over = True
 
@@ -145,19 +155,18 @@ while running:
     render_text(score_text, font, colors["black"], 
                 window, screen_width-915, 20) 
     
-    # Debug - Show Platform Count
-    platform_count = f"Plats: {len(platform_manager.platform_list)}"
-    render_text(platform_count, font, colors["black"], window, screen_width-915, 50)
-
     # Debug - Show Grounded Status
     grounded_status = f"jump: {player.can_jump}"
-    render_text(grounded_status, font, colors["black"], window, screen_width-900, 80)
+    render_text(grounded_status, font, colors["black"], window, screen_width-900, 50)
 
     # Debug - Show Shooting
     grounded_status = f"Shoot: {time.time() - player.projectile_manager.last_shot > player.projectile_manager.shoot_cooldown}"
+    render_text(grounded_status, font, colors["black"], window, screen_width-900, 80)
+
+    # Debug - Show Enemy Count
+    grounded_status = f"Enemies: {len(enemy_manager.enemy_list)}"
     render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
 
-    
     if game_over:
         render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
 

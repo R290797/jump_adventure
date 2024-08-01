@@ -1,6 +1,7 @@
 import pygame
 from pydantic import BaseModel, Field, PositiveInt
 from projectile import Projectile
+from enemy_manager import Enemy_Manager
 import time
 
 class Projectile_Manager(BaseModel):
@@ -11,6 +12,7 @@ class Projectile_Manager(BaseModel):
      # Rect List
     rect_list: list = Field(default_factory=list)
 
+    # Cooldown/Shot Logic Attributes
     shoot_cooldown: float = Field(default=1)
     last_shot: float = Field(default=time.time())
 
@@ -48,12 +50,20 @@ class Projectile_Manager(BaseModel):
     def remove_projectiles(self, window):
         for proj in self.projectile_list:
 
-            if proj.y < -20  or proj.y > window.get_height() + 20 or proj.x < -10 or proj.x > window.get_width() + 10:
+            # If Projectile Collided with enemy
+            if not proj.alive:
                 self.projectile_list.remove(proj)
 
+            # If Projectile Leaves the Screen
+            elif proj.y < -20  or proj.y > window.get_height() + 20 or proj.x < -10 or proj.x > window.get_width() + 10:
+                self.projectile_list.remove(proj)
 
     # Managee Projectiles (Move and Remove)
-    def manage_projectiles(self, window):
+    def manage_projectiles(self, window: pygame.surface, enemy_manager: Enemy_Manager):
+
+        # Check for Enemy Collisions
+        for proj in self.projectile_list:
+            proj.enemy_collision_detection(enemy_manager)
 
         # Move Projectiles
         self.move_projectiles()
