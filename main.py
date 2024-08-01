@@ -70,13 +70,16 @@ def event_handler(menu_active):
         if menu_active:
             menu.handle_input(event)
 
-        # Reseting Game / Back to Menu at Game Over Screen
+        # Reseting Game / Back to Menu / Quit at Game Over Screen
         elif not menu_active and game_over:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_r:
                     init_new_game(False)
                 if event.key == pygame.K_m:
                     init_new_game(True)
+                if event.key == pygame.K_q:
+                    pygame.quit()
+                    sys.exit()
 
         else:
             # Key Presses
@@ -125,7 +128,7 @@ player = Player(x=window.get_width()/2 - 25, y=30, width=50, height=50, color=co
 platform_manager = Platform_Manager()
 
 # Create Enemy Manager
-enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y, spawn_rate=5.0)
+enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y)
 
 # Create Boost Item Manager
 boost_item_manager = BoostItemManager(screen_width, screen_height, player)
@@ -152,7 +155,7 @@ def init_new_game(menu_status: bool):
     final_time = 0
     player = Player(x=window.get_width()/2 - 25, y=30, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
     platform_manager = Platform_Manager()
-    enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y, spawn_rate=5.0)
+    enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y)
     boost_item_manager = BoostItemManager(screen_width, screen_height, player)
 
 while running:
@@ -179,18 +182,12 @@ while running:
             # Render Actors
             player.draw_self(window)
 
-            # Manage Platforms
-            platform_manager.manage_platforms(window, colors)
-
-            # Manage Enemies
-            enemy_manager.manage_enemies(window)
-
             # Update Player position for Enemey Location
             enemy_manager.player_x = player.x + (player.width//2)
             enemy_manager.player_y = player.y + (player.height//2)
 
             # Collision Detection
-            player.platform_collision(platform_manager.rect_list)
+            player.handle_player_platforms(platform_manager, window)
             player.enemy_collision(enemy_manager)
 
             # Update Actors and Check for Game Over (TODO: Summarize in Function)
@@ -199,6 +196,12 @@ while running:
             # Spawn items at random intervals
             if random.random() < 0.01:  # Adjust frequency as needed
                 boost_item_manager.spawn_item()
+
+            # Manage Platforms
+            platform_manager.manage_platforms(window, colors)
+
+            # Manage Enemies
+            enemy_manager.manage_enemies(window)
 
             # Update and draw boost items
             boost_item_manager.update_items()
@@ -228,6 +231,12 @@ while running:
         # Debug - Show Enemy Count
         grounded_status = f"Enemies: {len(enemy_manager.enemy_list)}"
         render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
+
+        last_touch = f"LT: {player.last_touch_type}"
+        render_text(last_touch, font, colors["black"], window, screen_width-900, 150)
+
+        last_touch = f"plats: {len(platform_manager.platform_list)}"
+        render_text(last_touch, font, colors["black"], window, screen_width-900, 180)
 
         if game_over:
             render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
