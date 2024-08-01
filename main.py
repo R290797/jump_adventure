@@ -195,6 +195,7 @@ def render_boost_images(screen: pygame.surface):
     
     for boost in boost_item_manager.items:
 
+        # Load Images and Scale
         temp_image = pygame.image.load(image_path_dict[boost.boost_type])
         temp_image = pygame.transform.scale(temp_image, (boost.width, boost.height))
         screen.blit(temp_image, (boost.x, boost.y))
