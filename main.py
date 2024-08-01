@@ -19,8 +19,9 @@ from background import Background
 # PYGAME SETUP
 #_______________________________________________________________________________________________________________________
 
-# Initialize Pygame
+# Initialize Pygame and Mixer
 pygame.init()
+pygame.mixer.init()
 
 # Color Dictionary
 colors = {
@@ -49,6 +50,7 @@ timer = pygame.time.Clock()
 window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
 
+
 # Background Objects
 background_1 = Background(y=0, path="Resources/Sprites/Sprite-background_1.png", screen=window, moving=False)
 background_2 = Background(y=-700, path="Resources/Sprites/Sprite-background_2.png", screen=window, moving=False)
@@ -59,6 +61,20 @@ background_list = [background_1, background_2, background_3]
 font = pygame.font.SysFont(None, 55)
 font_medium = pygame.font.SysFont(None, 30)
 font_small = pygame.font.SysFont(None, 20)
+
+# The following code inspried by a guide found on The Python Code
+# 'How to Add Sound Effects to your Python Game' by Michael Maranan
+# Available at: https://thepythoncode.com/article/add-sound-effects-to-python-game-with-pygame 
+    # Load Sound Effects
+jump_sound = pygame.mixer.Sound("SoundEffects/Jump-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+shoot_sound = pygame.mixer.Sound("SoundEffects/Shoot-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+power_sound = pygame.mixer.Sound("SoundEffects/PowerUp-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+game_over_sound = pygame.mixer.Sound("SoundEffects/GameOver-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+
+    # Load Game Play Music
+game_play_music = "SoundEffects/GamePlay-SoundEffect.mp3" # Royalty Free Music: https://www.bensound.com/
+pygame.mixer.music.load(game_play_music)
+
 
 # FUNCTIONS
 #_______________________________________________________________________________________________________________________
@@ -93,6 +109,7 @@ def event_handler(menu_active):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     player.jump()
+                    jump_sound.play()
 
                 if event.key == pygame.K_LEFT:
                     player.x_delta -= player.speed
@@ -102,6 +119,7 @@ def event_handler(menu_active):
 
                 if event.key == pygame.K_UP:
                     player.shoot()
+                    shoot_sound.play()
 
                 if event.key == pygame.K_q:
                     running = False
@@ -255,8 +273,7 @@ while running:
         # Start The Game
         if not menu.active: 
             init_new_game(False)
-
-        
+            pygame.mixer.music.play(-1)
             
     else:
 
@@ -298,6 +315,7 @@ while running:
             if not player.alive:
                 final_time = time.time() - start_time
                 game_over = True
+                game_over_sound.play()
 
             # Render Images
             render_game_images(window)

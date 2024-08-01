@@ -11,6 +11,8 @@ class Menu:
         self.active = True
         self.high_scores_file = "high_scores.txt"
         self.high_scores = self.load_high_scores()
+        self.menu_sound = pygame.mixer.Sound("SoundEffects/MainMenu-SoundEffect.wav") # Royalty Free Music: https://www.chosic.com/
+        self.menu_sound.play(-1)
 
     def draw(self):
         self.window.fill((255, 255, 255))
@@ -38,6 +40,7 @@ class Menu:
     def select_option(self):
         if self.options[self.selected_option] == 'Start':
             self.active = False
+            self.menu_sound.stop()
         elif self.options[self.selected_option] == 'High Scores':
             self.show_high_scores()
         elif self.options[self.selected_option] == 'How to Play':
