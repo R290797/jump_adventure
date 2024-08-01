@@ -11,6 +11,7 @@ from platform_manager import Platform_Manager
 from enemy_manager import Enemy_Manager
 from boost_items import BoostItem, BoostItemManager
 from menu import Menu
+from background import Background
 
 
 # TODO: From Tutotrial (Update these Later) - Check Requirements
@@ -44,9 +45,15 @@ fps = 60
 # Pygame Tools
 timer = pygame.time.Clock()
 
-# Screen
+# Screen Variables
 window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
+
+# Background Objects
+background_1 = Background(y=0, path="Resources/Sprites/Sprite-background_1.png", screen=window, moving=False)
+background_2 = Background(y=700, path="Resources/Sprites/Sprite-background_2.png", screen=window, moving=False)
+background_3 = Background(y=1400, path="Resources/Sprites/Sprite-background_3.png", screen=window, moving=False)
+background_list = [background_2, background_3, background_1]
 
 # Font Variables
 font = pygame.font.SysFont(None, 55)
@@ -128,29 +135,41 @@ def render_platform_images(screen: pygame.surface):
     global platform_manager
     temp_image = None
 
+    image_path_dict = {"base": "Resources/Sprites/Sprite-normal_log.png",
+                       "horizontal": "Resources/Sprites/Sprite-moving_log.png",
+                        "falling":  "Resources/Sprites/Sprite-falling_log.png",
+                        "disappearing": "Resources/Sprites/Sprite-breaking_log.png"}
+
     for plat in platform_manager.platform_list:
 
-        # Check Types, Load Image Accordingly
-        if plat.type == "base":
-            temp_image = pygame.image.load("Resources/Sprites/Sprite-normal_log.png")
-            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
-            screen.blit(temp_image,(plat.x, plat.y))
+        temp_image = pygame.image.load(image_path_dict[plat.type])
+        temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
+        screen.blit(temp_image,(plat.x, plat.y))
 
-        if plat.type == "horizontal":
-            temp_image = pygame.image.load("Resources/Sprites/Sprite-moving_log.png")
-            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
-            screen.blit(temp_image,(plat.x, plat.y))
+# Render Enemy Images
+def render_enemy_images(screen: pygame.surface):
+    global enemy_manager
+    temp_image = None
 
-        if plat.type == "falling":
-            temp_image = pygame.image.load("Resources/Sprites/Sprite-falling_log.png")
-            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
-            screen.blit(temp_image,(plat.x, plat.y))
+    image_path_dict = {"base": "Resources/Sprites/Sprite-base_enemy.png",
+                       "bounce": "Resources/Sprites/Sprite-bouncing_enemy.png",
+                       "chase": "Resources/Sprites/Sprite-following_enemy.png"}
+    
+    for enemy in enemy_manager.enemy_list:
 
-        if plat.type == "disappearing":
-            temp_image = pygame.image.load("Resources/Sprites/Sprite-breaking_log.png")
-            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
-            screen.blit(temp_image,(plat.x, plat.y))
+        temp_image = pygame.image.load(image_path_dict[enemy.type])
+        temp_image = pygame.transform.scale(temp_image, (enemy.width, enemy.height))
+        screen.blit(temp_image, (enemy.x, enemy.y))
 
+
+# Render Moving Backround
+def render_background(game_over: bool):
+
+    for background in background_list:
+        background.render()
+
+        if game_over == False:
+            background.move()
 
 
 # Rendering all Game Images
@@ -161,6 +180,9 @@ def render_game_images(screen: pygame.surface):
 
     # Render Platforoms
     render_platform_images(window)
+
+    # Render Enemies
+    render_enemy_images(window)
 
     
 
@@ -175,7 +197,7 @@ def render_game_images(screen: pygame.surface):
 menu = Menu(window, font, colors) 
 
 # Create Player Object
-player = Player(x=window.get_width()/2 - 25, y=30, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
+player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=40, color=colors["green"], speed=3, jump_height=20, gravity=1)
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
@@ -206,12 +228,14 @@ def init_new_game(menu_status: bool):
     game_over = False
     start_time = time.time()
     final_time = 0
-    player = Player(x=window.get_width()/2 - 25, y=30, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
+    player = Player(x=window.get_width()/2 - 25, y=30, width=60, height=60, color=colors["green"], speed=3, jump_height=20, gravity=1)
     platform_manager = Platform_Manager()
     enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y)
     boost_item_manager = BoostItemManager(screen_width, screen_height, player)
 
 while running:
+
+    
   
     # Handle Menu Actions
     if menu.active:
@@ -225,12 +249,15 @@ while running:
         # Start The Game
         if not menu.active: 
             init_new_game(False)
+
+        
             
     else:
 
         # Pygame Variables
         timer.tick(fps)
         window.fill((255, 255, 255))
+        render_background(game_over)
 
         if not game_over:
             # Render Actors

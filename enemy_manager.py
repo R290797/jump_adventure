@@ -39,8 +39,11 @@ class Enemy_Manager(BaseModel):
         if time.time() - self.spawn_time > self.spawn_rate:
             # TODO: Add Enemy Variations here
 
+            # Spawn Random Enemy in intervals
+            enemy_type = random.choice([Base_Enemy, Chasing_Enemy, Bouncing_Enemy])
+
             # Place Enemy above the Top of the Screen
-            self.enemy_list.append(Chasing_Enemy(y=-50, x=random.randint(0,screen.get_width())))
+            self.enemy_list.append(enemy_type(y=-50, x=random.randint(0,screen.get_width())))
 
             # Reset Timer
             self.spawn_time = time.time()

@@ -8,8 +8,8 @@ class Base_Enemy(BaseModel):
     # Position Attributes
     x: int 
     y: int 
-    width: PositiveInt = Field(default=25)
-    height: PositiveInt = Field(default=25)
+    width: PositiveInt = Field(default=60)
+    height: PositiveInt = Field(default=40)
     color: tuple[int, int, int] = Field(default=(255,0,0))
 
     # Movement Attributes
@@ -19,6 +19,7 @@ class Base_Enemy(BaseModel):
 
     # Status Attributes
     alive: bool = Field(default = True)
+    type: str = "base"
 
     # Draw the Enemy, Return Rect object for Collision Calculations
     def draw(self, screen: pygame.Surface) -> pygame.rect:
@@ -55,6 +56,7 @@ class Bouncing_Enemy(Base_Enemy):
 
     x_direction: int = random.choice([-1,1])
     y_direction: int = random.choice([-1,1])
+    type: str = "bounce"
 
     # Movement Logic of Bouncing Enemy
     def move(self, screen: pygame.surface, px_pos: int, py_pos: int):
@@ -81,6 +83,7 @@ class Chasing_Enemy(Base_Enemy):
 
     x_direction: int = Field(default=0)
     y_direction: int = Field(default=0)
+    type: str = "chase"
 
     # Track Player movement on a single axis (Referenced:  Reference: https://stackoverflow.com/questions/20044791/how-to-make-an-enemy-follow-the-player-in-pygame)
     def get_movement_vector(self, px_pos: int, py_pos):
