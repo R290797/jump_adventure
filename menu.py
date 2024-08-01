@@ -40,10 +40,11 @@ class Menu:
             self.active = False
         elif self.options[self.selected_option] == 'High Scores':
             self.show_high_scores()
+        elif self.options[self.selected_option] == 'How to Play':
+            self.show_how_to_play()
         elif self.options[self.selected_option] == 'Quit':
             pygame.quit()
             exit() 
-        # Additional functionality for 'How to Play' can be added here
 
     def show_high_scores(self):
         self.window.fill((255, 255, 255))
@@ -68,6 +69,39 @@ class Menu:
                     pygame.quit()
                     exit()
 
+    def show_how_to_play(self):
+        instructions = [
+            "How to Play:",
+            "",
+            "Use the arrow keys to move:",
+            "  - LEFT: Move left",
+            "  - RIGHT: Move right",
+            "  - UP: Shoot",
+            "Press SPACE to jump.",
+            "Press Q to quit the game.",
+            "",
+            "Avoid enemies and stay on platforms.",
+            "Collect boost items for extra points."
+        ]
+
+        self.window.fill((255, 255, 255))
+        for i, line in enumerate(instructions):
+            instruction_surface = self.font.render(line, True, self.colors["black"])
+            instruction_rect = instruction_surface.get_rect(center=(self.window.get_width() // 2, 100 + i * 40))
+            self.window.blit(instruction_surface, instruction_rect)
+
+        pygame.display.flip()
+
+        # Wait for user to press a key to go back to the menu
+        waiting = True
+        while waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                    waiting = False
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+
     def load_high_scores(self):
         if not os.path.exists(self.high_scores_file):
             return []
@@ -78,7 +112,7 @@ class Menu:
 
     def save_high_score(self, score):
         self.high_scores.append(score)
-        self.high_scores = sorted(set(self.high_scores), reverse=True)[:10]
+        self.high_scores = sorted(set(self.high_scores), reverse=True)[:10] 
 
         with open(self.high_scores_file, 'w') as file:
             for score in self.high_scores:
