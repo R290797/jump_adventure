@@ -41,6 +41,9 @@ class Player(BaseModel):
     double_jump: DoubleJump = None
     shield_active: bool = Field(default=False)
     extra_jump: bool = False  # For double jump tracking
+    
+    # Sounds Effects
+    power_sound : pygame.mixer.Sound
 
      # Configuration to allow arbitrary types
     class Config:
@@ -177,16 +180,19 @@ class Player(BaseModel):
         if not self.parachute:
             self.parachute = Parachute(self)
         self.parachute.activate()
+        self.power_sound.play()
 
     def collect_shield(self):
         if not self.shield:
             self.shield = Shield(self)
         self.shield.activate()
+        self.power_sound.play()
 
     def collect_double_jump(self):
         if not self.double_jump:
             self.double_jump = DoubleJump(self)
-        self.double_jump.activate()        
+        self.double_jump.activate()
+        self.power_sound.play()        
 
     def get_rect(self):
         return pygame.Rect(self.x, self.y, self.width, self.height)

@@ -18,8 +18,9 @@ from menu import Menu
 # PYGAME SETUP
 #_______________________________________________________________________________________________________________________
 
-# Initialize Pygame
+# Initialize Pygame and Mixer
 pygame.init()
+pygame.mixer.init()
 
 # Color Dictionary
 colors = {
@@ -48,9 +49,22 @@ timer = pygame.time.Clock()
 window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
 
-
 # Font for Game Over Text
 font = pygame.font.SysFont(None, 55)
+
+# The following code inspried by a guide found on The Python Code
+# 'How to Add Sound Effects to your Python Game' by Michael Maranan
+# Available at: https://thepythoncode.com/article/add-sound-effects-to-python-game-with-pygame 
+    # Load Sound Effects
+jump_sound = pygame.mixer.Sound("SoundEffects/Jump-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+shoot_sound = pygame.mixer.Sound("SoundEffects/Shoot-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+power_sound = pygame.mixer.Sound("SoundEffects/PowerUp-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+game_over_sound = pygame.mixer.Sound("SoundEffects/GameOver-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
+
+    # Load Game Play Music
+game_play_music = "SoundEffects/GamePlay-SoundEffect.mp3" # Royalty Free Music: https://www.bensound.com/
+pygame.mixer.music.load(game_play_music)
+
 
 # FUNCTIONS
 #_______________________________________________________________________________________________________________________
@@ -73,6 +87,7 @@ def event_handler(menu_active):
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     player.jump()
+                    jump_sound.play()
 
                 if event.key == pygame.K_LEFT:
                     player.x_delta -= player.speed
@@ -82,6 +97,7 @@ def event_handler(menu_active):
 
                 if event.key == pygame.K_UP:
                     player.shoot()
+                    shoot_sound.play()
 
                 if event.key == pygame.K_q:
                     running = False
@@ -115,7 +131,7 @@ def check_and_save_high_score(score,menu):
 menu = Menu(window, font, colors) 
 
 # Create Player Object
-player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
+player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1, power_sound=power_sound)
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
@@ -144,6 +160,7 @@ while running:
         menu.draw()  
         if menu.start_game(): 
             menu_active = False
+            pygame.mixer.music.play(-1)
             
     else:
         # Pygame Variables
@@ -184,6 +201,7 @@ while running:
             if not player.alive:
                 final_time = time.time() - start_time
                 game_over = True
+                game_over_sound.play()
 
         # Display the Timer/Score
         elapsed_time = final_time if game_over else time.time() - start_time
