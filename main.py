@@ -8,7 +8,7 @@ import sys
 # Import Classes
 from player import Player
 from platform_manager import Platform_Manager
-from enemy_manager import Enemy_Manager
+from enemy_manager import Enemy_Manager 
 from boost_items import BoostItem, BoostItemManager
 from menu import Menu
 from background import Background
@@ -120,6 +120,12 @@ def render_text(text, font, color, surface, x, y):
     textrect = textobj.get_rect()
     textrect.center = (x, y)
     surface.blit(textobj, textrect)
+    
+    
+# Check and Save High Score Function
+def check_and_save_high_score(score,menu):
+    if score > 0:
+        menu.save_high_score(score)
 
 
 # Render Player Image
@@ -324,6 +330,8 @@ while running:
 
         if game_over:
             render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
+
+            check_and_save_high_score(int(elapsed_time), menu)
             render_text(f"Final Score: {int(elapsed_time)}", font_medium, colors["red"], window, screen_width / 2, (screen_height / 2) + 30)
             render_text("Press R to Reset, Press for Main Menu, Press Q to Quit", font_small, colors["black"], window, screen_width / 2, (screen_height / 2) + 50)
 
