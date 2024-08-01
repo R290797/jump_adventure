@@ -30,7 +30,7 @@ class Player(BaseModel):
     projectile_manager: Projectile_Manager = Projectile_Manager(shoot_cooldown=1)
     
     # Out of Bounds Attributes
-    player_outofbounds: bool = Field(default=False)
+    alive: bool = Field(default=True)
     player_enemy_collision: bool = Field(default=False)
  
     # Draw Player (And Return Rect. for Collision Detection)
@@ -112,9 +112,7 @@ class Player(BaseModel):
 
         # Check for falling off the screen
         if self.y > window.get_height() + 100:
-            self.player_outofbounds = True
-        else:
-            self.player_outofbounds = False
+            self.alive = False
 
 
 
@@ -144,18 +142,18 @@ class Player(BaseModel):
         # Iterate Rects (Go by Index to Find According enemy in Enemy List)
         for i in range(len(enemy_manager.rect_list)):
 
-            # Check if Player Collides With Enemy
-            if enemy_manager.rect_list[i].colliderect(self.x, self.y, self.width, self.height):
+            # Check if Player Collides With Enemy (On the Bottom half)
+            if enemy_manager.rect_list[i].colliderect(self.x, self.y + (2 * self.height //3), self.width, self.height //3):
 
-                # Check if Player is Falling (Not Stationary)
-                if self.y_delta > 0:
+                # Destroy that Enemy (Set Alive to False)
+                enemy_manager.enemy_list[i].alive = False
+                
+                # Make Player Jump
+                self.y_delta = -self.jump_height
 
-                    # Destroy that Enemy (Set Alive to 0)
-                    enemy_manager.enemy_list[i].alive = False
-                    
-                    # Make Player Jump
-                    self.y_delta = -self.jump_height
-
+            # If Collides with top 2/3 of Player, Lose the Game
+            elif enemy_manager.rect_list[i].colliderect(self.x, self.y, self.width, 2 * self.height //3) and enemy_manager.enemy_list[i].alive:
+                self.alive = False
 
 
             

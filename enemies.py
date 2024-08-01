@@ -1,6 +1,7 @@
 from pydantic import BaseModel, Field, PositiveInt
 import pygame
 import random
+import math
 
 class Base_Enemy(BaseModel):
 
@@ -81,32 +82,19 @@ class Chasing_Enemy(Base_Enemy):
     x_direction: int = Field(default=0)
     y_direction: int = Field(default=0)
 
-    # Track Player movement on a single axis
-    def track_x(self, px_pos: int):
+    # Track Player movement on a single axis (Referenced:  Reference: https://stackoverflow.com/questions/20044791/how-to-make-an-enemy-follow-the-player-in-pygame)
+    def get_movement_vector(self, px_pos: int, py_pos):
         
-        if px_pos > self.x:
-            self.x_direction = 1
-        elif px_pos < self.x:
-            self.x_direction = -1
-        else:
-            self.x_direction = 0
-        
-    def track_y(self, py_pos: int):
+        # Calculate Distance Vector to Player
+        delta_x = px_pos - self.x
+        delta_y = py_pos - self.y
+        distance =  math.hypot(delta_x, delta_y)
+        return delta_x/distance, delta_y/distance
 
-        if py_pos > self.y:
-            self.y_direction = 1
-        elif py_pos < self.y:
-            self.y_direction = -1
-        else:
-            self.y_direction = 0
+
 
     def move(self, screen: pygame.surface, px_pos: int, py_pos: int):
 
-        # Track Player Movement
-        self.track_x(px_pos)
-        self.track_y(py_pos)
-
-        # Move Enemy Accordingly
-        self.x += self.horz_speed * self.x_direction
-        self.y += self.vert_speed * self.y_direction * 2
-
+        dx,dy = self.get_movement_vector(px_pos, py_pos)
+        self.x += self.horz_speed * dx
+        self.y += self.vert_speed * dy

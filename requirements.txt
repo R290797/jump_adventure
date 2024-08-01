@@ -2,3 +2,4 @@ pygame
 pydantic
 random
 time
+math

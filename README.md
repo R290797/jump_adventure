@@ -37,3 +37,10 @@ Test to Write:
 - Player Collides With Platforms
 - Player Can Jump
 - Player Dies When Touching an Enemy
+
+
+
+
+# REFERENCES:
+
+- Player Tracking: https://stackoverflow.com/questions/20044791/how-to-make-an-enemy-follow-the-player-in-pygame 

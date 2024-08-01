@@ -143,7 +143,7 @@ while running:
         player.update(window, enemy_manager)
 
          # Capture the time at game over 
-        if player.player_outofbounds:
+        if not player.alive:
             final_time = time.time() - start_time
             game_over = True
 
