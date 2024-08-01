@@ -80,7 +80,7 @@ pygame.mixer.music.load(game_play_music)
 #_______________________________________________________________________________________________________________________
 
 # Event Handler (For User Inputs) 
-def event_handler(menu_active):
+def event_handler(menu_active, game_over):
     global running
     global player
 
@@ -354,7 +354,7 @@ while running:
             render_text("Press R to Reset, Press for Main Menu, Press Q to Quit", font_small, colors["black"], window, screen_width / 2, (screen_height / 2) + 50)
 
     # Event Handler
-    event_handler(menu.active)  
+    event_handler(menu.active, game_over)  
 
     # Update Display
     pygame.display.flip()
