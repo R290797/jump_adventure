@@ -13,6 +13,9 @@ class Platform(BaseModel):
     vert_speed: int = Field(default=1)
     horz_speed: int = Field(default=0)
     radius: PositiveInt = Field(default=10)
+
+    # Status Attributes
+    type: str = "base"
    
     # Draw Platform
     def draw(self, window):
@@ -25,13 +28,21 @@ class Platform(BaseModel):
     def move(self):
         self.y += self.vert_speed
 
+    # Function to Get Collision Rect
+    def get_rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+
+
 
 # Platform Variations
 
 #Horizontal Platform
 class Horizontal_Platform(Platform):
+
+    # New Attributes / Overwrite Type
     direction : int = Field(default=0)
-    
+    type: str = "horizontal"
+
     #Horizontal Platform Changing Direction             
     def move(self):
         self.x += self.horz_speed * self.direction 
@@ -45,7 +56,26 @@ class Horizontal_Platform(Platform):
         
 # Falling Platforms
 class Falling_Platform(Platform):
+
+    # Overwrite Type
+    type: str = "falling"
+
     def move(self):
         self.y += self.vert_speed*2
             
 # Disapearing Platforms            
+class Disappearing_Platform(Platform):
+
+    # Overwrite Type
+    type: str = "disappearing"
+
+    # Add Unique Attributes
+    first_touch: bool = Field(default=False)
+
+    # Set Funciton for First Touch
+    def set_first_touch(self):
+        self.first_touch = True
+
+    # Set X out of Bounds (To Avoid List Index Problems)
+    def set_out_of_bounds(self):
+        self.x = -1000

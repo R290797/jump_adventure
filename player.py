@@ -2,6 +2,8 @@ import pygame
 from pydantic import BaseModel, Field, PositiveInt,  ConfigDict
 from projectile_manager import Projectile_Manager
 from enemy_manager import Enemy_Manager
+from platform_manager import Platform_Manager
+from game_platform import Platform, Horizontal_Platform, Disappearing_Platform, Falling_Platform
 from boosts import Parachute, Shield, DoubleJump
 
 class Player(BaseModel):
@@ -19,14 +21,18 @@ class Player(BaseModel):
     x_delta: int = Field(default=0)
     y_delta: int = Field(default=0)
 
+    # Added X Velocity through Moving Platform
+    added_x_delta: int = Field(default=0)
+
     # Jump Mechnics
     grounded: bool = Field(default=False)
     can_jump: bool = Field(default=True)
     jump_height: PositiveInt = Field(default=10)
     double_jump_active: bool = Field(default=False)
 
-    # Grounded Buffer (Prevents inconsistent collision detection)
+    # Grounded Buffer (Prevents inconsistent collision detection) and Platform Interactions
     grounded_buffer: int = Field(default=10)
+    last_touch_type: str = Field(default="none")
 
     # Shooting Mechanic
     projectile_manager: Projectile_Manager = Projectile_Manager(shoot_cooldown=1)
@@ -46,9 +52,9 @@ class Player(BaseModel):
     class Config:
         arbitrary_types_allowed = True
 
-    # Draw Player (And Return Rect. for Collision Detection)
+    # Draw Player (And Return Rect. for Collision Detection) 
     def draw_self(self, window):
-
+        
         # Draw Player Rectangle and Return Rect
         return pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
            
@@ -67,7 +73,7 @@ class Player(BaseModel):
     def shoot(self):
 
         # Spawn Projectiles at the Center of the  Player
-        self.projectile_manager.add_projectile(self.x + (self.width//2), self.y + (self.height//2), 5, 5, 5)
+        self.projectile_manager.add_projectile(int(self.x + (self.width//2)), int(self.y + (self.height//2)), 5, 5, 5)
 
     # Check if Player is Grounded (and Apply Gravity)
     def check_grounded(self):
@@ -84,12 +90,26 @@ class Player(BaseModel):
             self.y += self.y_delta
             self.grounded_buffer -= 1
 
+    # Limit Y position of the Player
+    def check_height(self):
+
+        if self.y < -70:
+            self.y_delta = 0
+            self.y = -69
+
     # If Grounded Buffer Runs out, Jump Becomes Unavailable
     def check_jump(self):
         if self.grounded_buffer > 0:
             self.can_jump = True
         else:
             self.can_jump = False
+            self.last_touch_type = "none"
+
+    def is_on_platform(self):
+        if self.grounded_buffer > 0:
+            return True
+        else:
+            return False
 
     # Wrap Around Logic
     def wrap_around(self, screen_width):
@@ -111,11 +131,12 @@ class Player(BaseModel):
     # Update Player Movement
     def update(self, window: pygame.surface, enemy_manager: Enemy_Manager):
 
-        # Grounded Check
+        # Grounded Positional Values
         self.check_grounded()
+        self.check_height()
 
         # Move Player Horizontally
-        self.x += self.x_delta * self.speed
+        self.x += (self.x_delta * self.speed) + self.added_x_delta
 
         # Manage Player Attack (Shooting)
         self.manage_player_attack(window, enemy_manager)
@@ -130,29 +151,73 @@ class Player(BaseModel):
         if self.y > window.get_height() + 100:
             self.alive = False
 
+    # Collision Detection and Interactions
+
+    # Player/Platform Interactions
+    def move_with_plat(self, platform: Platform):
+
+        # If HorizontalPlatform, Move in the Same Direction as the Platform
+        if self.last_touch_type == "horizontal" and self.is_on_platform():
+            self.added_x_delta = platform.horz_speed * platform.direction
+        else:
+            self.added_x_delta = 0
+
+    def break_platform(self, platform: Platform):
+
+        # Check if Platform Has been Touched, 
+        if platform.type == "disappearing":
+            platform.set_first_touch()
+
+            
+
+    # Apply interactions with Platforms
+    def platform_interactions(self, platform: Platform):
+
+        self.grounded = True
+        self.move_with_plat(platform)
+        self.break_platform(platform)
 
 
-    # Collision Detection
+    # Remove Disappearing Platforms After They have been touched and Player has Left
+    def remove_d_platforms(self, platform_manager: Platform_Manager):
+            
+        for plat in platform_manager.platform_list:
+            # Move Platform If leaving the Platform (IF they are of type disappearing)
+            if plat.type == "disappearing":
+
+                if not self.last_touch_type == "disappearing" and plat.first_touch == True:
+            
+                    plat.set_out_of_bounds()
+
 
     # Player/Platform Collision
-    def platform_collision(self, plat_rect_list: list):
-
+    def platform_collision(self, platform_manager: Platform_Manager):
         self.grounded = False
 
-        # Iterate Through Platform Rectangles
-        for i in range(len(plat_rect_list)):
+        # Iterate Through Platform Rectangles / Check for Collisions
+        for plat in platform_manager.platform_list:
 
-            # Check if Player Rect Collides with Platform Rect
-            if plat_rect_list[i].colliderect(self.x, self.y, self.width, self.height):
+            if plat.get_rect().colliderect(self.x, self.y, self.width, self.height):
+
+                # Set Last Touch Type (For Interactions)
+                self.last_touch_type = plat.type
 
                 # Check if Player y speed is positive (Falling)
                 if self.y_delta >= 0 and self.grounded == False:
-
-                    # Set Player Grounded
-                    self.grounded = True
+    
+                    # Apply Interactions
+                    self.platform_interactions(plat)
                     break
 
+    # Handle All Platform Functionality
+    def handle_player_platforms(self, platform_manager: Platform_Manager, screen: pygame.surface):
 
+        # Remove Disappearing Platforms
+        self.remove_d_platforms(platform_manager)
+
+        # Check Collisions
+        self.platform_collision(platform_manager)
+    
     # Player/Enemy Collision (Destroy Enemy if Coming From the Top - Falling)
     def enemy_collision(self, enemy_manager: Enemy_Manager): 
 

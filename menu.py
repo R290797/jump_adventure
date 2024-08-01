@@ -118,5 +118,3 @@ class Menu:
             for score in self.high_scores:
                 file.write(f"{score}\n")
 
-    def start_game(self):
-        return not self.active
