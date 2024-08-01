@@ -41,5 +41,3 @@ class Menu:
             
         #TODO: Functionality for 'High Scores' and 'How to Play' 
 
-    def start_game(self):
-        return not self.active

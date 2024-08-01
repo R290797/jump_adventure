@@ -69,6 +69,15 @@ def event_handler(menu_active):
 
         if menu_active:
             menu.handle_input(event)
+
+        # Reseting Game / Back to Menu at Game Over Screen
+        elif not menu_active and game_over:
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_r:
+                    init_new_game(False)
+                if event.key == pygame.K_m:
+                    init_new_game(True)
+
         else:
             # Key Presses
             if event.type == pygame.KEYDOWN:
@@ -110,7 +119,7 @@ def render_text(text, font, color, surface, x, y):
 menu = Menu(window, font, colors) 
 
 # Create Player Object
-player = Player(x=50, y=50, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
+player = Player(x=window.get_width()/2 - 25, y=30, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
@@ -123,22 +132,43 @@ boost_item_manager = BoostItemManager(screen_width, screen_height, player)
 
 # Game Loop
 running = True
-menu_active = True 
 game_over = False
 start_time = time.time()
 final_time = 0  
 
+# Function to Reset / Start the Game
+def init_new_game(menu_status: bool):
+
+    # Get Global Variables
+    global menu, game_over, start_time, final_time, player, platform_manager, enemy_manager, boost_item_manager
+
+    # Return to Menu or not
+    if menu_status:
+        menu = Menu(window, font, colors) 
+    
+    # Reset Globals    
+    game_over = False
+    start_time = time.time()
+    final_time = 0
+    player = Player(x=window.get_width()/2 - 25, y=30, width=50, height=50, color=colors["green"], speed=3, jump_height=20, gravity=1)
+    platform_manager = Platform_Manager()
+    enemy_manager = Enemy_Manager(player_x=player.x, player_y=player.y, spawn_rate=5.0)
+    boost_item_manager = BoostItemManager(screen_width, screen_height, player)
+
 while running:
   
-    if menu_active:
+    # Handle Menu Actions
+    if menu.active:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             menu.handle_input(event)  
         menu.draw()  
-        if menu.start_game(): 
-            menu_active = False
+
+        # Start The Game
+        if not menu.active: 
+            init_new_game(False)
             
     else:
         # Pygame Variables
@@ -202,10 +232,10 @@ while running:
         if game_over:
             render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
             render_text(f"Final Score: {int(elapsed_time)}", font_medium, colors["red"], window, screen_width / 2, (screen_height / 2) + 30)
-            render_text("Press R to Reset, Press for Main Menu", font_small, colors["black"], window, screen_width / 2, (screen_height / 2) + 50)
+            render_text("Press R to Reset, Press for Main Menu, Press Q to Quit", font_small, colors["black"], window, screen_width / 2, (screen_height / 2) + 50)
 
     # Event Handler
-    event_handler(menu_active)  
+    event_handler(menu.active)  
 
     # Update Display
     pygame.display.flip()
