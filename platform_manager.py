@@ -13,21 +13,21 @@ class Platform_Manager(BaseModel):
     rect_list: list = Field(default=[])
 
     # Start With Base Platform
-    platform_list: list = [Platform(x=1, y=100, width=1000, height=5, color=(0,255,0), down_speed=1, radius=15)]
+    platform_list: list = [Platform(x=-400, y=100, width=1500, height=70, color=(0,255,0), down_speed=1, radius=15)]
 
     # Random Platform Spawn
     def spawn_platform(self,screen_width,colors):
         x = random.randint(0,screen_width -150)
         y = -100
         width = random.randint(50,150)
-        height = 5
+        height = 20
         vert_speed = 1
         horz_speed = random.randint(1, 5) 
         color = random.choice(list(colors.values()))
         
         platform_type = random.choices(
             [Platform,Horizontal_Platform,Falling_Platform, Disappearing_Platform],
-            [0, 0.5, 0, 0.5]
+            [0.4, 0.2, 0.2, 0.2]
         )[0]
 
         if platform_type == Horizontal_Platform:

@@ -115,6 +115,59 @@ def render_text(text, font, color, surface, x, y):
     surface.blit(textobj, textrect)
 
 
+# Render Player Image
+def render_player_image(screen: pygame.surface):
+    global player
+
+    player_image = pygame.image.load("Resources/Sprites/monke1.png")
+    player_image = pygame.transform.scale(player_image, (player.width, player.height))
+    screen.blit(player_image, (player.x, player.y))
+
+# Render Platform Images
+def render_platform_images(screen: pygame.surface):
+    global platform_manager
+    temp_image = None
+
+    for plat in platform_manager.platform_list:
+
+        # Check Types, Load Image Accordingly
+        if plat.type == "base":
+            temp_image = pygame.image.load("Resources/Sprites/Sprite-normal_log.png")
+            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
+            screen.blit(temp_image,(plat.x, plat.y))
+
+        if plat.type == "horizontal":
+            temp_image = pygame.image.load("Resources/Sprites/Sprite-moving_log.png")
+            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
+            screen.blit(temp_image,(plat.x, plat.y))
+
+        if plat.type == "falling":
+            temp_image = pygame.image.load("Resources/Sprites/Sprite-falling_log.png")
+            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
+            screen.blit(temp_image,(plat.x, plat.y))
+
+        if plat.type == "disappearing":
+            temp_image = pygame.image.load("Resources/Sprites/Sprite-breaking_log.png")
+            temp_image = pygame.transform.scale(temp_image, (plat.width, plat.height))
+            screen.blit(temp_image,(plat.x, plat.y))
+
+
+
+# Rendering all Game Images
+def render_game_images(screen: pygame.surface):
+    
+    # Render Player
+    render_player_image(window)
+
+    # Render Platforoms
+    render_platform_images(window)
+
+    
+
+# Rendering Background Image
+
+
+
 #GAME SETUP
 #_______________________________________________________________________________________________________________________
 
@@ -174,6 +227,7 @@ while running:
             init_new_game(False)
             
     else:
+
         # Pygame Variables
         timer.tick(fps)
         window.fill((255, 255, 255))
@@ -211,6 +265,9 @@ while running:
             if not player.alive:
                 final_time = time.time() - start_time
                 game_over = True
+
+            # Render Images
+            render_game_images(window)
 
         # Display the Timer/Score
         elapsed_time = final_time if game_over else time.time() - start_time
