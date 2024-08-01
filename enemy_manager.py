@@ -7,6 +7,7 @@ import random
 
 class Enemy_Manager(BaseModel):
 
+    # Position Variables
     player_x: int
     player_y: int
 
@@ -18,8 +19,7 @@ class Enemy_Manager(BaseModel):
 
     # Spawn Attributes
     spawn_rate: float = Field(default=15.0) # Time between Enemy spawns (in Seconds)
-    spawn_time: float = Field(default=time.time()) # Time since last Enemy spawn
- 
+    spawn_time: float = Field(default=time.time()) # Time since last Enemy spawn 
 
     # Function to Render the Enemies
     def render_enemies(self, screen: pygame.surface):

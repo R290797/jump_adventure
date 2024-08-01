@@ -10,6 +10,9 @@ class Projectile(BaseModel):
     width: PositiveInt
     height: PositiveInt
 
+    # Sounds Effects
+    hit_sound: pygame.mixer.Sound
+
     # Movement Attributes
     speed: PositiveInt = Field(default=5)
     x_delta: int = Field(default=0)
@@ -17,6 +20,10 @@ class Projectile(BaseModel):
 
     # Status Attributes
     alive: bool = Field(default=True)
+
+    # Configuration to allow arbitrary types
+    class Config:
+        arbitrary_types_allowed = True
 
     def draw(self, window):
         return pygame.draw.rect(window, (255,0,0), (self.x, self.y, self.width, self.height))
@@ -37,6 +44,7 @@ class Projectile(BaseModel):
 
                 # Destroy that Enemy (Set Alive to 0)
                 enemy_manager.enemy_list[i].alive = False
+                self.hit_sound.play()
 
                 # Destroy current Projectile
                 self.alive = False
