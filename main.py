@@ -48,9 +48,10 @@ timer = pygame.time.Clock()
 window = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Jump Adventure")
 
-
-# Font for Game Over Text
+# Font Variables
 font = pygame.font.SysFont(None, 55)
+font_medium = pygame.font.SysFont(None, 30)
+font_small = pygame.font.SysFont(None, 20)
 
 # FUNCTIONS
 #_______________________________________________________________________________________________________________________
@@ -143,7 +144,6 @@ while running:
         # Pygame Variables
         timer.tick(fps)
         window.fill((255, 255, 255))
-        plat_rect_list = []
 
         if not game_over:
             # Render Actors
@@ -201,6 +201,8 @@ while running:
 
         if game_over:
             render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
+            render_text(f"Final Score: {int(elapsed_time)}", font_medium, colors["red"], window, screen_width / 2, (screen_height / 2) + 30)
+            render_text("Press R to Reset, Press for Main Menu", font_small, colors["black"], window, screen_width / 2, (screen_height / 2) + 50)
 
     # Event Handler
     event_handler(menu_active)  
