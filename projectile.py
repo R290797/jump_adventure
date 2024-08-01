@@ -32,18 +32,21 @@ class Projectile(BaseModel):
         self.x += self.x_delta * self.speed
         self.y += self.y_delta * self.speed
 
-    
+    # Function to Get Collision Rect
+    def get_rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
+
     # Collision Detection with Enemies
     def enemy_collision_detection(self, enemy_manager: Enemy_Manager):
 
          # Iterate Rects (Go by Index to Find According enemy in Enemy List)
-        for i in range(len(enemy_manager.rect_list)):
+        for enemy in enemy_manager.enemy_list:
 
             # Check if Projectile Collides With Enemy
-            if enemy_manager.rect_list[i].colliderect(self.x, self.y, self.width, self.height):
+            if enemy.get_rect().colliderect(self.x, self.y, self.width, self.height):
 
                 # Destroy that Enemy (Set Alive to 0)
-                enemy_manager.enemy_list[i].alive = False
+                enemy.alive = False
                 self.hit_sound.play()
 
                 # Destroy current Projectile
