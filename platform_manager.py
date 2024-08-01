@@ -84,5 +84,5 @@ class Platform_Manager(BaseModel):
             self.horz_speed += 1
             self.vert_speed += 1
             
-            if not self.spawn_rate < 0.3:
+            if not self.spawn_rate < 0.2:
                 self.spawn_rate -= 0.2
