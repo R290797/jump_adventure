@@ -73,3 +73,10 @@ class Enemy_Manager(BaseModel):
 
          # Spawn Enemy
         self.spawn_enemy(screen)
+
+    # Increase Difficulty
+    def increment_difficulty(self, level):
+
+        # Every 2 Level, decrease the Spawn Rate of the Enemies by 1 (Until Spawn Rate is at 5)
+        if self.spawn_rate > 5 and level%2 == 0:
+            self.spawn_rate -= 1

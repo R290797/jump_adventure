@@ -12,17 +12,19 @@ class Platform_Manager(BaseModel):
     spawn_time: float = Field(default=time.time()) # Time since last platform spawn
     rect_list: list = Field(default=[])
 
+    # Dynamic Speed
+    vert_speed: int = Field(default=1)
+    horz_speed: int = Field(default=1)
+
     # Start With Base Platform
     platform_list: list = [Platform(x=-400, y=100, width=1500, height=70, color=(0,255,0), down_speed=1, radius=15)]
 
     # Random Platform Spawn
     def spawn_platform(self,screen_width,colors):
-        x = random.randint(0,screen_width -150)
+        x = random.randint(0,screen_width)
         y = -100
         width = random.randint(50,150)
         height = 20
-        vert_speed = 1
-        horz_speed = random.randint(1, 5) 
         color = random.choice(list(colors.values()))
         
         platform_type = random.choices(
@@ -31,13 +33,10 @@ class Platform_Manager(BaseModel):
         )[0]
 
         if platform_type == Horizontal_Platform:
-            return Horizontal_Platform(x=x, y=y, width=width, height=height, color=color, horz_speed=horz_speed, direction=random.choice([-1, 1]))
-        elif platform_type == Falling_Platform:
-            return Falling_Platform(x=x, y=y, width=width, height=height, color=color, vert_speed=vert_speed)
-        elif platform_type == Disappearing_Platform:
-            return Disappearing_Platform(x=x, y=y, width=width, height=height, color=color)
-        else:
-            return Platform(x=x, y=y, width=width, height=height, color=color, vert_speed=vert_speed)
+            return Horizontal_Platform(x=x, y=y, width=width, height=height, color=color, vert_speed=self.vert_speed,horz_speed=self.horz_speed, direction=random.choice([-1, 1]))
+        
+        elif platform_type == Falling_Platform or platform_type == Disappearing_Platform or platform_type == Platform:
+            return platform_type(x=x, y=y, width=width, height=height, color=color, vert_speed=self.vert_speed)
     
     # Render Platforms
     def render_platforms(self,window):
@@ -76,3 +75,14 @@ class Platform_Manager(BaseModel):
 
         # remove out of bounds Platforms
         self.remove_platforms(window)
+
+    # Function to Increase Difficulty of Platform Manager
+    def increment_difficulty(self, level: int):
+
+        # Increase Speed of Platforms Every up to Level 20 (every 2 Levels)
+        if level < 20 and level%2 == 0:
+            self.horz_speed += 1
+            self.vert_speed += 1
+            
+            if not self.spawn_rate < 0.3:
+                self.spawn_rate -= 0.2
