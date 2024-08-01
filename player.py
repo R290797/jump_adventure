@@ -76,7 +76,7 @@ class Player(BaseModel):
     def shoot(self):
 
         # Spawn Projectiles at the Center of the  Player
-        self.projectile_manager.add_projectile(int(self.x + (self.width//2)), int(self.y + (self.height//2)), 5, 5, 5)
+        self.projectile_manager.add_projectile(int(self.x + (self.width//2) - 5), int(self.y + (self.height//2)), 25, 20, 5)
 
     # Check if Player is Grounded (and Apply Gravity)
     def check_grounded(self):

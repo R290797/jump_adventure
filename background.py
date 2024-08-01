@@ -24,7 +24,7 @@ class Background(BaseModel):
     def move(self):
 
         if self.y >= 1400:
-            self.y = -700
+            self.y = -699
         else:
             self.y += 1
 
