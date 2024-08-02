@@ -20,7 +20,9 @@ With dynamically increasing difficulty, a variety of enemy types, and unique pla
 4. [Installation](#installation)
 5. [How to Run the Game](#how-to-run-the-game)
 6. [References](#references)
-7. [License](#license)
+7. [PyTest and CI](#pytest-and-ci)
+8. [License](#license)
+
 
 ## Game Structure
 The game is structured into several Python modules, each handling different aspects of the game:
@@ -199,12 +201,12 @@ Key Functions:
 ## Installation
 To install the game, ensure you have Python installed on your system. Then, install the required dependencies using the `requirements.txt` file:
 
-pip install -r requirements.txt
+`pip install -r requirements.txt`
 
 ## How to Run the Game
 Once the dependencies are installed, you can run the game by executing the main.py file:
 
-python main.py
+`python main.py`
 
 ## References
 The game utilizes several Python libraries and follows best practices in game development. Here are some references that were used during the development:
@@ -225,6 +227,13 @@ The game utilizes several Python libraries and follows best practices in game de
     - "Wrap Around Movement - PyGame Thursdays 29" by codemy.com: https://youtu.be/NzCulpYC0p8?si=pC2ub_RixVEi9ekQ
     - "How to make an enemy follow the player in pygame" by Stack Overflow: https://stackoverflow.com/questions/20044791/how-to-make-an-enemy-follow-the-player-in-pygame
     - GitHub Repositories: Referenced for certain coding patterns and solutions.
+
+## PyTest and CI
+Tests for the Game have been implemented in the `test.py` file. Because they are Testing the actual happenings within the game and need to render certain objects, running these test requires running the command line code: `pytest -p no:warnings test.py`
+
+CI has been integrated, due to the complex nature of the PyGame Frame, placeholder Assertions are being used, referencing the `ci-test.py` file. The Are acting as a placeholder for now, to allow for a proper Setup of CI. These are subject to change, should the project be continued. 
+
+The `main.yml` was created with the assistance of LLM Tools. 
 
 ## License
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
