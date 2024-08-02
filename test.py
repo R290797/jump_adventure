@@ -6,6 +6,8 @@ from platform_manager import Platform_Manager
 from enemy_manager import Enemy_Manager
 from player import Player
 
+# Tests started over the call: pytest -p no:warnings test.py  
+
 pygame.init()
 pygame.mixer.init()
 timer = pygame.time.Clock()
