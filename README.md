@@ -3,7 +3,7 @@
 This game is designed using Python, leveraging several libraries to create an engaging and interactive experience. The main libraries used are `pygame` for game development and `pydantic` for data validation. This README file will cover the structure of the game, the functionality of important modules, installation, how to run the game, references, and how everything integrates to create the final product.
 
 ## Introduction
-Welcome to **Jump Adventure**, an exciting and fast-paced platformer game where you navigate through challenging levels filled with moving platforms, dangerous enemies, and helpful boost items. **Jump Adventure** tests your reflexes and strategic thinking as you jump, shoot, and dodge your way to the highest score. Inspired by the classic game **Doodle Jump** 
+Welcome to **Jump Adventure**, an exciting and fast-paced platformer game where you navigate through challenging levels filled with moving platforms, dangerous enemies, and helpful boost items. **Jump Adventure** tests your reflexes and strategic thinking as you jump, shoot, and dodge your way to the highest score. Inspired by the classic game **Doodle Jump**.
 
 This game was created by **Ahmed Noureldin**, **Burak Kağan Yılmazer**, and **Robert Richartz**. All artwork used in the game was uniquely produced by **Leonhard** and **Robert Richartz**, ensuring a distinctive visual experience.
 
