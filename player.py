@@ -188,6 +188,13 @@ class Player(BaseModel):
         self.check_shield()
         self.check_parachute()
 
+    def check_out_of_bounds(self, window: pygame.surface):
+
+        # If below screen, set alive to false
+        if self.y > window.get_height() + 100:
+            self.alive = False
+
+
     # Update Player Movement
     def update(self, window: pygame.surface, enemy_manager: Enemy_Manager):
 
@@ -207,8 +214,7 @@ class Player(BaseModel):
         self.check_boosts()
 
         # Check for falling off the screen
-        if self.y > window.get_height() + 100:
-            self.alive = False
+        self.check_out_of_bounds(window)
 
     # Collision Detection and Interactions
 
