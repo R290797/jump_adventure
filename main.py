@@ -66,7 +66,7 @@ font_small = pygame.font.SysFont(None, 20)
 # The following code inspried by a guide found on The Python Code
 # 'How to Add Sound Effects to your Python Game' by Michael Maranan
 # Available at: https://thepythoncode.com/article/add-sound-effects-to-python-game-with-pygame 
-    # Load Sound Effects
+# Load Sound Effects
 jump_sound = pygame.mixer.Sound("SoundEffects/Jump-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
 shoot_sound = pygame.mixer.Sound("SoundEffects/Shoot-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
 power_sound = pygame.mixer.Sound("SoundEffects/PowerUp-SoundEffect.wav") # Royalty Free Music: https://mixkit.co/
@@ -74,9 +74,9 @@ game_over_sound = pygame.mixer.Sound("SoundEffects/GameOver-SoundEffect.wav") # 
 hit_sound = pygame.mixer.Sound("Resources/Sounds/EnemyImpact-SoundEffect.wav")
 break_sound = pygame.mixer.Sound("Resources/Sounds/WoodHit-SoundEffect.wav")
 
-    # Load Game Play Music
-game_play_music = "SoundEffects/GamePlay-SoundEffect.mp3" # Royalty Free Music: https://www.bensound.com/
-pygame.mixer.music.load(game_play_music)
+# Load Game Play Music
+game_play_music = pygame.mixer.Sound("SoundEffects/GamePlay-SoundEffect.mp3")# Royalty Free Music: https://www.bensound.com/
+#pygame.mixer.music.load(game_play_music)
 
 
 # FUNCTIONS
@@ -86,6 +86,7 @@ pygame.mixer.music.load(game_play_music)
 def event_handler(menu_active, game_over):
     global running
     global player
+    global start_time
 
     # Iterate Through Pygame Events
     for event in pygame.event.get():
@@ -94,6 +95,7 @@ def event_handler(menu_active, game_over):
             sys.exit()
 
         if menu_active:
+            start_time = time.time()
             menu.handle_input(event)
 
         # Reseting Game / Back to Menu / Quit at Game Over Screen
@@ -103,6 +105,7 @@ def event_handler(menu_active, game_over):
                     init_new_game(False)
                 if event.key == pygame.K_m:
                     init_new_game(True)
+                    
                 if event.key == pygame.K_q:
                     pygame.quit()
                     sys.exit()
@@ -222,6 +225,25 @@ def render_background(game_over: bool):
         if game_over == False:
             background.move()
 
+# Render Power Up Buff Effect Icon
+def render_icon_image(screen: pygame.surface, path: str, x_pos: int, y_pos: int):
+
+    icon_image = pygame.image.load(path)
+    icon_image = pygame.transform.scale(icon_image, (40, 40))
+    screen.blit(icon_image, (x_pos, y_pos))
+
+def render_all_icons(screen: pygame.surface):
+
+    # if player effect is active, display image
+    if player.double_jump_active:
+        render_icon_image(window, "Resources/Sprites/Sprite-double_jump_powerup.png", 0, (screen.get_height() - 40))
+    
+    if player.shield:
+        render_icon_image(window, "Resources/Sprites/Sprite-shield_powerup.png", 40, (screen.get_height() - 40))
+
+    if player.parachute:
+        render_icon_image(window, "Resources/Sprites/Sprite-parachute_powerup.png", 80, (screen.get_height() - 40))
+
 
 # Rendering all Game Images
 def render_game_images(screen: pygame.surface):
@@ -240,6 +262,9 @@ def render_game_images(screen: pygame.surface):
 
     # Render Projectiles
     render_projectile_images(window)
+
+    # Render Power Up Icons When Active
+    render_all_icons(window)
 
 
 #GAME SETUP
@@ -320,7 +345,8 @@ while running:
         # Start The Game
         if not menu.active: 
             init_new_game(False)
-            pygame.mixer.music.play(-1)
+            pygame.mixer.stop()
+            game_play_music.play(-1)
             
     else:
 
