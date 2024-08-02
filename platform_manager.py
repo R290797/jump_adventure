@@ -9,6 +9,7 @@ import random
 import time
 import pygame
 
+# Use pytest -p no:warnings
 
 class Platform_Manager(BaseModel):
 
@@ -22,18 +23,20 @@ class Platform_Manager(BaseModel):
     horz_speed: int = Field(default=1)
 
     # Start With Base Platform
-    platform_list: list = [
-        Platform(
-            x=-400,
-            y=100,
-            width=1500,
-            height=70,
-            color=(0, 255, 0),
-            down_speed=1,
-            radius=15,
-            direction=0,
-        )
-    ]
+    platform_list: list = Field(
+        default=[
+            Platform(
+                x=-400,
+                y=100,
+                width=1500,
+                height=70,
+                color=(0, 255, 0),
+                down_speed=vert_speed,
+                radius=15,
+                direction=0,
+            )
+        ]
+    )
 
     # Random Platform Spawn
     def spawn_platform(self, screen_width, colors):
