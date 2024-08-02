@@ -138,7 +138,10 @@ class Player(BaseModel):
             return True
         else:
             return False
-
+        
+#The following code inspried by a guide found on youtube
+# 'Wrap Around Movement - PyGame Thursdays 29' by codemy.com
+# Available at: https://youtu.be/NzCulpYC0p8?si=pC2ub_RixVEi9ekQ
     # Wrap Around Logic
     def wrap_around(self, screen_width):
         if self.x > screen_width:
@@ -308,6 +311,8 @@ class Player(BaseModel):
                 and not self.shield.active
             ):
                 self.alive = False
+                
+#The following code modified by ChatGPT 
 
     # Boost Mechanic Functions (Collision and Collecting)
     def collect_parachute(self):

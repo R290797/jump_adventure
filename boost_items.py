@@ -1,7 +1,7 @@
 import pygame
 import random
-from boosts import Parachute, Shield, DoubleJump
 
+#The following code modified by ChatGPT 
 
 class BoostItem:
     def __init__(self, x, y, width, height, boost_type, speed=2):
