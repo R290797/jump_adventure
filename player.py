@@ -22,7 +22,7 @@ class Player(BaseModel):
 
     # Movement Attributes
     speed: int = Field(default=2)
-    gravity: PositiveInt = Field(default=1)
+    gravity: float = Field(default=1)
     x_delta: int = Field(default=0)
     y_delta: int = Field(default=0)
 
@@ -47,9 +47,10 @@ class Player(BaseModel):
     player_enemy_collision: bool = Field(default=False)
 
      # Boost-Up Effects
-    parachute: Parachute = None
-    shield: Shield = None
-    double_jump: DoubleJump = None
+    parachute: Parachute = Parachute(active=False)
+    shield: Shield = Shield(active=False)
+    double_jump: DoubleJump = DoubleJump(active=False)
+
     shield_active: bool = Field(default=False)
     extra_jump: bool = False  # For double jump tracking
     
@@ -66,13 +67,20 @@ class Player(BaseModel):
     # Jump
     def jump(self):
 
-        if self.can_jump or (self.double_jump_active and not self.extra_jump):
+        if self.can_jump:
+
             self.y_delta = -self.jump_height  
             self.grounded = False
+
             if self.can_jump:
                 self.can_jump = False
-            elif self.double_jump_active:
-                self.extra_jump = True
+
+        # Double Jump if active
+        elif not self.can_jump and self.double_jump.active:
+
+            self.y_delta = -self.jump_height
+            self.double_jump.active = False  
+           
 
     # Shoot
     def shoot(self):
@@ -132,7 +140,35 @@ class Player(BaseModel):
         # Manage Projectiles (Movement and Despawning)
         self.projectile_manager.manage_projectiles(window, enemy_manager)
 
+    # Check if Boosts are still active
+    def check_double_jump(self):
 
+        # Check Durations
+        if self.double_jump.active:
+            self.double_jump.check_duration()
+        
+    def check_shield(self):
+
+        # Check Duration
+        if self.shield.active:
+            self.shield.check_duration()
+
+    def check_parachute(self):
+
+        # Check Duration
+        if self.parachute.active:
+            self.parachute.check_duration()
+
+        # Apply Parachute Effects
+        if self.parachute.active: self.gravity = 0.5
+        else: self.gravity = 1
+              
+    def check_boosts(self):
+
+        self.check_double_jump()
+        self.check_shield()
+        self.check_parachute()
+           
     # Update Player Movement
     def update(self, window: pygame.surface, enemy_manager: Enemy_Manager):
 
@@ -142,15 +178,14 @@ class Player(BaseModel):
 
         # Move Player Horizontally
         self.x += (self.x_delta * self.speed) + self.added_x_delta
+        self.wrap_around(window.get_width())
 
         # Manage Player Attack (Shooting)
         self.manage_player_attack(window, enemy_manager)
-
-        # Handle wrap-around
-        self.wrap_around(window.get_width())
-
-        # Check Jump
+        
+        # Check Conditions
         self.check_jump()
+        self.check_boosts()
 
         # Check for falling off the screen
         if self.y > window.get_height() + 100:
@@ -173,14 +208,12 @@ class Player(BaseModel):
         if platform.type == "disappearing":
             platform.set_first_touch()
 
-    
     # Apply interactions with Platforms
     def platform_interactions(self, platform: Platform):
 
         self.grounded = True
         self.move_with_plat(platform)
         self.break_platform(platform)
-
 
     # Remove Disappearing Platforms After They have been touched and Player has Left
     def remove_d_platforms(self, platform_manager: Platform_Manager):
@@ -194,8 +227,6 @@ class Player(BaseModel):
                     self.break_sound.play()
                     platform_manager.platform_list.remove(plat)
                     
-
-
     # Player/Platform Collision
     def platform_collision(self, platform_manager: Platform_Manager):
         self.grounded = False
@@ -246,20 +277,20 @@ class Player(BaseModel):
 
     # Boost Mechanic Functions (Collision and Collecting)
     def collect_parachute(self):
-        if not self.parachute:
-            self.parachute = Parachute(self)
+        if not self.parachute.active:
+            self.parachute = Parachute()
         self.parachute.activate()
         self.power_sound.play()
 
     def collect_shield(self):
-        if not self.shield:
-            self.shield = Shield(self)
+        if not self.shield.active:
+            self.shield = Shield()
         self.shield.activate()
         self.power_sound.play()
 
     def collect_double_jump(self):
-        if not self.double_jump:
-            self.double_jump = DoubleJump(self)
+        if not self.double_jump.active:
+            self.double_jump = DoubleJump()
         self.double_jump.activate()
         self.power_sound.play()        
 
