@@ -36,7 +36,7 @@ class Projectile_Manager(BaseModel):
 
         # Render Projectiles and add updated Rects. to Rect List
         for proj in self.projectile_list:
-            rect = proj.draw(window)
+            rect = proj.get_rect()
             self.rect_list.append(rect)
 
         return self.rect_list

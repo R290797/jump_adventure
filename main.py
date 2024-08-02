@@ -151,7 +151,6 @@ def check_and_save_high_score(score,menu):
     if score > 0:
         menu.save_high_score(score)
 
-
 # Render Player Image
 def render_player_image(screen: pygame.surface):
     global player
@@ -354,8 +353,9 @@ while running:
         render_background(game_over)
 
         if not game_over:
+
             # Render Actors
-            player.draw_self(window)
+            player.get_rect()
 
             # Update Player position for Enemey Location
             enemy_manager.player_x = player.x + (player.width//2)
@@ -378,9 +378,8 @@ while running:
             # Manage Enemies
             enemy_manager.manage_enemies(window)
 
-            # Update and draw boost items
+            # Update Boost Items
             boost_item_manager.update_items()
-            boost_item_manager.draw_items(window)
 
             # Increase Level (Dynamic Scaling)
             increase_level()

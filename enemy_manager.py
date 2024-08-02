@@ -30,7 +30,7 @@ class Enemy_Manager(BaseModel):
         for enemy in self.enemy_list:
             
             # Add to Rect List and Draw
-            self.rect_list.append(enemy.draw(screen))
+            self.rect_list.append(enemy.get_rect())
 
     # Function to Spawn in Enemies
     def spawn_enemy(self, screen: pygame.surface):

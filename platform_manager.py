@@ -47,7 +47,7 @@ class Platform_Manager(BaseModel):
         for plat in self.platform_list:
 
             # Add Platform Rectangles to List (For Collision Detection)
-            self.rect_list.append(plat.draw(window))
+            self.rect_list.append(plat.get_rect())
 
     # Remove out of Bounds Platforms
     def remove_platforms(self, window: pygame.surface):

@@ -50,9 +50,6 @@ class Player(BaseModel):
     parachute: Parachute = Parachute(active=False)
     shield: Shield = Shield(active=False)
     double_jump: DoubleJump = DoubleJump(active=False)
-
-    shield_active: bool = Field(default=False)
-    extra_jump: bool = False  # For double jump tracking
     
     # Configuration to allow arbitrary types
     class Config:
@@ -63,6 +60,10 @@ class Player(BaseModel):
         
         # Draw Player Rectangle and Return Rect
         return pygame.draw.rect(window, self.color, (self.x, self.y, self.width, self.height))
+    
+    # Return Rect for Collision
+    def get_rect(self):
+        return pygame.Rect(self.x, self.y, self.width, self.height)
            
     # Jump
     def jump(self):
@@ -246,6 +247,9 @@ class Player(BaseModel):
                     self.platform_interactions(plat)
                     break
 
+
+
+
     # Handle All Platform Functionality
     def handle_player_platforms(self, platform_manager: Platform_Manager, screen: pygame.surface):
 
@@ -271,8 +275,8 @@ class Player(BaseModel):
                 # Make Player Jump
                 self.y_delta = -self.jump_height
 
-            # If Collides with top 2/3 of Player, Lose the Game
-            elif enemy.get_rect().colliderect(self.x, self.y, self.width, 2 * self.height //3) and enemy.alive:
+            # If Collides with top 2/3 of Player, Lose the Game (And Player Doesnt Have Shield)
+            elif enemy.get_rect().colliderect(self.x, self.y, self.width, 2 * self.height //3) and enemy.alive and not self.shield.active:
                 self.alive = False
 
     # Boost Mechanic Functions (Collision and Collecting)
