@@ -17,11 +17,7 @@ jobs:
 
     - name: Install dependencies
       run: |
-        sudo apt-get update
-        sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev xvfb
-        python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        pip install pygame pydantic pytest pytest-cov
+        pip install requirements.txt
 
     - name: Lint with flake8
       run: |
@@ -31,7 +27,6 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pip install pytest pytest-cov
         pytest -p no:warnings test.py 
 
     - name: Upload coverage to Codecov
