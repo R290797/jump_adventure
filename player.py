@@ -62,7 +62,7 @@ class Player(BaseModel):
         arbitrary_types_allowed = True
 
     # Draw Player (And Return Rect. for Collision Detection)
-    def draw_self(self, window):
+    def draw_self(self, window) -> pygame.Rect:
 
         # Draw Player Rectangle and Return Rect
         return pygame.draw.rect(
@@ -70,11 +70,11 @@ class Player(BaseModel):
         )
 
     # Return Rect for Collision
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
     # Jump
-    def jump(self):
+    def jump(self) -> None:
 
         if self.can_jump:
 
@@ -91,7 +91,7 @@ class Player(BaseModel):
             self.double_jump.active = False
 
     # Shoot
-    def shoot(self):
+    def shoot(self) -> None:
 
         # Spawn Projectiles at the Center of the  Player
         self.projectile_manager.add_projectile(
@@ -104,7 +104,7 @@ class Player(BaseModel):
         )
 
     # Check if Player is Grounded (and Apply Gravity)
-    def check_grounded(self):
+    def check_grounded(self) -> None:
 
         # Check if Player is Grounded
         if self.grounded:
@@ -119,31 +119,31 @@ class Player(BaseModel):
             self.grounded_buffer -= 1
 
     # Limit Y position of the Player
-    def check_height(self):
+    def check_height(self) -> None:
 
         if self.y < -70:
             self.y_delta = 0
             self.y = -69
 
     # If Grounded Buffer Runs out, Jump Becomes Unavailable
-    def check_jump(self):
+    def check_jump(self) -> None:
         if self.grounded_buffer > 0:
             self.can_jump = True
         else:
             self.can_jump = False
             self.last_touch_type = "none"
 
-    def is_on_platform(self):
+    def is_on_platform(self) -> bool:
         if self.grounded_buffer > 0:
             return True
         else:
             return False
-        
-#The following code inspried by a guide found on youtube
-# 'Wrap Around Movement - PyGame Thursdays 29' by codemy.com
-# Available at: https://youtu.be/NzCulpYC0p8?si=pC2ub_RixVEi9ekQ
+
+    # The following code inspried by a guide found on youtube
+    # 'Wrap Around Movement - PyGame Thursdays 29' by codemy.com
+    # Available at: https://youtu.be/NzCulpYC0p8?si=pC2ub_RixVEi9ekQ
     # Wrap Around Logic
-    def wrap_around(self, screen_width):
+    def wrap_around(self, screen_width) -> None:
         if self.x > screen_width:
             self.x = -self.width
         elif self.x + self.width < 0:
@@ -152,7 +152,7 @@ class Player(BaseModel):
     # Manage Shooting Mechanic
     def manage_player_attack(
         self, window: pygame.surface, enemy_manager: Enemy_Manager
-    ):
+    ) -> None:
 
         # Render Projectiles
         self.projectile_manager.render_projectiles(window)
@@ -161,7 +161,7 @@ class Player(BaseModel):
         self.projectile_manager.manage_projectiles(window, enemy_manager)
 
     # Check if Boosts are still active
-    def check_double_jump(self):
+    def check_double_jump(self) -> None:
 
         # Check Durations
         if self.double_jump.active:
@@ -196,7 +196,6 @@ class Player(BaseModel):
         # If below screen, set alive to false
         if self.y > window.get_height() + 100:
             self.alive = False
-
 
     # Update Player Movement
     def update(self, window: pygame.surface, enemy_manager: Enemy_Manager):
@@ -317,8 +316,8 @@ class Player(BaseModel):
                 and not self.shield.active
             ):
                 self.alive = False
-                
-#The following code modified by ChatGPT 
+
+    # The following code modified by ChatGPT
 
     # Boost Mechanic Functions (Collision and Collecting)
     def collect_parachute(self):
@@ -339,5 +338,5 @@ class Player(BaseModel):
         self.double_jump.activate()
         self.power_sound.play()
 
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         return pygame.Rect(self.x, self.y, self.width, self.height)

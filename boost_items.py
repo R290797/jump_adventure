@@ -1,7 +1,8 @@
 import pygame
 import random
 
-#The following code modified by ChatGPT 
+# The following code modified by ChatGPT
+
 
 class BoostItem:
     def __init__(self, x, y, width, height, boost_type, speed=2):

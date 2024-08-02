@@ -5,18 +5,30 @@ from pydantic import BaseModel
 from platform_manager import Platform_Manager
 from enemy_manager import Enemy_Manager
 from player import Player
+import tempfile
 
-# Tests started over the call: pytest -p no:warnings test.py  
+# Tests started over the call: pytest -p no:warnings test.py
 
 pygame.init()
 pygame.mixer.init()
 timer = pygame.time.Clock()
 window = pygame.display.set_mode((1000, 700))
 empty_p_manager = Platform_Manager(spawn_rate=100)
+
+# Function to Create a Temporary Sound File (Mock Data) - Creation of filled Wav File (Reference: https://docs.python.org/3/library/tempfile.html and GPT-4o)
+def create_temp_wav_file():
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+    with open(temp_file.name, 'wb') as f:
+        f.write(b'RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00D\xac\x00\x00\x88X\x01\x00\x01\x00\x08\x00data\x00\x00\x00\x00')
+    return temp_file.name
+
+temp_sound = create_temp_wav_file()
+
+
 player = Player(
-    power_sound=pygame.mixer.Sound("Resources/Sounds/WoodHit-SoundEffect.wav"),
-    hit_sound=pygame.mixer.Sound("Resources/Sounds/EnemyImpact-SoundEffect.wav"),
-    break_sound=pygame.mixer.Sound("Resources/Sounds/WoodHit-SoundEffect.wav"),
+    power_sound=pygame.mixer.Sound(temp_sound),
+    hit_sound=pygame.mixer.Sound(temp_sound),
+    break_sound=pygame.mixer.Sound(temp_sound),
 )
 empty_e_manager = Enemy_Manager(player_x=player.x, player_y=player.y, spawn_rate=1000)
 
@@ -44,7 +56,6 @@ def event_handler():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
 
 
 # Test Platform Spawn

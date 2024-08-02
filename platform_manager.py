@@ -11,10 +11,11 @@ import pygame
 
 # Use pytest -p no:warnings
 
+
 class Platform_Manager(BaseModel):
 
     # Spawn Attributes
-    spawn_rate: float = Field(default=1.0)  # Time between platform spawns
+    spawn_rate: float = Field(default=1)  # Time between platform spawns
     spawn_time: float = Field(default=time.time())  # Time since last platform spawn
     rect_list: list = Field(default=[])
 
@@ -106,5 +107,5 @@ class Platform_Manager(BaseModel):
             self.horz_speed += 1
             self.vert_speed += 1
 
-            if not self.spawn_rate < 0.2:
-                self.spawn_rate -= 0.2
+        if self.spawn_rate > 0.2:
+            self.spawn_rate -= 0.2

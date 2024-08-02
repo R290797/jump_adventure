@@ -1,6 +1,7 @@
 import pygame
 import os
 
+
 # This function implementation is inspired by a solution found on Game Dev Academy
 # Original post: "Pygame Menu Tutorial – Complete Guide" by Zenva
 # URL: https://gamedevacademy.org/pygame-menu-tutorial-complete-guide/
@@ -31,12 +32,12 @@ class Menu:
         # Scrolling Variables
         self.scroll_position = 0
         self.scroll_step = 40
-        
+
         # Load Instructions from .txt
         self.instructions = self.load_instructions()
-    
-# This code was generated with the assistance of OpenAI's ChatGPT (Version 4)
-# For more information, visit https://www.openai.com/chatgpt    
+
+    # This code was generated with the assistance of OpenAI's ChatGPT (Version 4)
+    # For more information, visit https://www.openai.com/chatgpt
     def load_instructions(self):
         instructions = []
         try:
@@ -85,7 +86,7 @@ class Menu:
         elif self.options[self.selected_option] == "Quit":
             pygame.quit()
             exit()
-    
+
     # Handle Displaying High Scores
     def display_scores(self):
         for i, score in enumerate(self.high_scores):
@@ -114,7 +115,7 @@ class Menu:
 
     # This code was generated with the assistance of OpenAI's ChatGPT (Version 4)
     # For more information, visit https://www.openai.com/chatgpt
-    # Wait for user to press a key to go back to Menu 
+    # Wait for user to press a key to go back to Menu
     def show_high_scores(self):
         self.blit_scores()
         self.display_scores()
@@ -128,7 +129,7 @@ class Menu:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     exit()
-    
+
     # This function implementation is inspired by a solution found on Game Dev Academy
     # Original post: "Pygame Menu Tutorial – Complete Guide" by Zenva
     # URL: https://gamedevacademy.org/pygame-menu-tutorial-complete-guide/
@@ -138,10 +139,12 @@ class Menu:
         self.render_how_to_play_title()
         line_height = 40
         viewport_height = self.window.get_height() - 140
-        max_scroll_position = self.calculate_max_scroll_position(line_height, viewport_height)
+        max_scroll_position = self.calculate_max_scroll_position(
+            line_height, viewport_height
+        )
         self.handle_scrolling(line_height, viewport_height, max_scroll_position)
-    
-    # Handle How to Play Title    
+
+    # Handle How to Play Title
     def render_how_to_play_title(self):
         title_font = pygame.font.SysFont(None, 44)
         title_surface = title_font.render("How to Play:", True, self.colors["yellow"])
@@ -173,9 +176,18 @@ class Menu:
     # Render the instructions from txt
     def render_instructions(self, line_height):
         for i, line in enumerate(self.instructions):
-            font, color = (pygame.font.SysFont(None, 36), self.colors["yellow"]) if line.endswith(':') and not line.startswith(" ") else (pygame.font.SysFont(None, 28), (255, 255, 255))
+            font, color = (
+                (pygame.font.SysFont(None, 36), self.colors["yellow"])
+                if line.endswith(":") and not line.startswith(" ")
+                else (pygame.font.SysFont(None, 28), (255, 255, 255))
+            )
             instruction_surface = font.render(line, True, color)
-            instruction_rect = instruction_surface.get_rect(center=(self.window.get_width() // 2, 140 + i * line_height - self.scroll_position))
+            instruction_rect = instruction_surface.get_rect(
+                center=(
+                    self.window.get_width() // 2,
+                    140 + i * line_height - self.scroll_position,
+                )
+            )
             self.window.blit(instruction_surface, instruction_rect)
 
     # Handle & Process Scroll Positioning
@@ -185,9 +197,13 @@ class Menu:
                 if event.key == pygame.K_RETURN:
                     return False
                 elif event.key == pygame.K_DOWN:
-                    self.scroll_position = min(self.scroll_position + self.scroll_step, max_scroll_position)
+                    self.scroll_position = min(
+                        self.scroll_position + self.scroll_step, max_scroll_position
+                    )
                 elif event.key == pygame.K_UP:
-                    self.scroll_position = max(self.scroll_position - self.scroll_step, 0)
+                    self.scroll_position = max(
+                        self.scroll_position - self.scroll_step, 0
+                    )
             if event.type == pygame.QUIT:
                 self.quit_game()
         return True
@@ -195,7 +211,7 @@ class Menu:
     # Handle Drawing Scroll Bar
     def draw_scroll_bar(self, viewport_height, total_scrollable_height):
         if total_scrollable_height == 0:
-            return  
+            return
         bar_height = viewport_height * (viewport_height / total_scrollable_height)
         bar_y = (
             self.scroll_position
@@ -207,7 +223,7 @@ class Menu:
             (169, 169, 169),
             (self.window.get_width() - 20, 140 + bar_y, 10, bar_height),
         )
-        
+
     # This function implementation is inspired by a solution found on Stack Overflow
     # Original post: "How to read, write and update of your game highscore in pygame from/to file.txt saved.?" by Mike67
     # URL: https://stackoverflow.com/questions/63751107/how-to-read-write-and-update-of-your-game-highscore-in-pygame-from-to-file-txt
