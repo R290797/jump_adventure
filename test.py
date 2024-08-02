@@ -15,12 +15,16 @@ timer = pygame.time.Clock()
 window = pygame.display.set_mode((1000, 700))
 empty_p_manager = Platform_Manager(spawn_rate=100)
 
+
 # Function to Create a Temporary Sound File (Mock Data) - Creation of filled Wav File (Reference: https://docs.python.org/3/library/tempfile.html and GPT-4o)
 def create_temp_wav_file():
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
-    with open(temp_file.name, 'wb') as f:
-        f.write(b'RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00D\xac\x00\x00\x88X\x01\x00\x01\x00\x08\x00data\x00\x00\x00\x00')
+    with open(temp_file.name, "wb") as f:
+        f.write(
+            b"RIFF$\x00\x00\x00WAVEfmt \x10\x00\x00\x00\x01\x00\x01\x00D\xac\x00\x00\x88X\x01\x00\x01\x00\x08\x00data\x00\x00\x00\x00"
+        )
     return temp_file.name
+
 
 temp_sound = create_temp_wav_file()
 
