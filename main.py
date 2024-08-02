@@ -246,7 +246,7 @@ def render_all_icons(screen: pygame.surface):
 
 
 # Rendering all Game Images
-def render_game_images(screen: pygame.surface):
+def render_game_images(window: pygame.surface):
     
     # Render Player
     render_player_image(window)
