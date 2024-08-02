@@ -32,7 +32,7 @@ jobs:
     - name: Test with pytest
       run: |
         pip install pytest pytest-cov
-        xvfb-run -a pytest -p no:warnings test.py --cov=. --cov-report=xml 
+        pytest -p no:warnings test.py
 
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
