@@ -13,7 +13,7 @@ class Menu:
         self.high_scores_file = "high_scores.txt"
         self.high_scores = self.load_high_scores()
         self.menu_sound = pygame.mixer.Sound(
-            "SoundEffects/MainMenu-SoundEffect.wav"
+            "Resources/Sounds/MainMenu-SoundEffect.wav"
         )  # Royalty Free Music: https://www.chosic.com/
         self.menu_sound.play(-1)
 
