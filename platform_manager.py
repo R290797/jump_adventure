@@ -1,4 +1,9 @@
-from game_platform import Platform, Horizontal_Platform, Falling_Platform, Disappearing_Platform
+from game_platform import (
+    Platform,
+    Horizontal_Platform,
+    Falling_Platform,
+    Disappearing_Platform,
+)
 from pydantic import BaseModel, Field, PositiveInt
 import random
 import time
@@ -8,8 +13,8 @@ import pygame
 class Platform_Manager(BaseModel):
 
     # Spawn Attributes
-    spawn_rate: float = Field(default=1.0) # Time between platform spawns
-    spawn_time: float = Field(default=time.time()) # Time since last platform spawn
+    spawn_rate: float = Field(default=1.0)  # Time between platform spawns
+    spawn_time: float = Field(default=time.time())  # Time since last platform spawn
     rect_list: list = Field(default=[])
 
     # Dynamic Speed
@@ -17,29 +22,43 @@ class Platform_Manager(BaseModel):
     horz_speed: int = Field(default=1)
 
     # Start With Base Platform
-    platform_list: list = [Platform(x=-400, y=100, width=1500, height=70, color=(0,255,0), down_speed=1, radius=15)]
+    platform_list: list = [
+        Platform(
+            x=-400,
+            y=100,
+            width=1500,
+            height=70,
+            color=(0, 255, 0),
+            down_speed=1,
+            radius=15,
+            direction=0,
+        )
+    ]
 
     # Random Platform Spawn
-    def spawn_platform(self,screen_width,colors):
-        x = random.randint(0,screen_width)
+    def spawn_platform(self, screen_width, colors):
+        x = random.randint(0, screen_width)
         y = -100
-        width = random.randint(50,150)
+        width = random.randint(50, 150)
         height = 20
-        color = random.choice(list(colors.values()))
-        
+
         platform_type = random.choices(
-            [Platform,Horizontal_Platform,Falling_Platform, Disappearing_Platform],
-            [0.4, 0.2, 0.2, 0.2]
+            [Platform, Horizontal_Platform, Falling_Platform, Disappearing_Platform],
+            [0.4, 0.2, 0.2, 0.2],
         )[0]
 
-        if platform_type == Horizontal_Platform:
-            return Horizontal_Platform(x=x, y=y, width=width, height=height, color=color, vert_speed=self.vert_speed,horz_speed=self.horz_speed, direction=random.choice([-1, 1]))
-        
-        elif platform_type == Falling_Platform or platform_type == Disappearing_Platform or platform_type == Platform:
-            return platform_type(x=x, y=y, width=width, height=height, color=color, vert_speed=self.vert_speed)
-    
+        return platform_type(
+            x=x,
+            y=y,
+            width=width,
+            height=height,
+            vert_speed=self.vert_speed,
+            horz_speed=self.horz_speed,
+            direction=random.choice([-1, 1]),
+        )
+
     # Render Platforms
-    def render_platforms(self,window):
+    def render_platforms(self, window):
 
         # Reset Rect List
         self.rect_list = []
@@ -65,7 +84,7 @@ class Platform_Manager(BaseModel):
 
         # Render Platforms
         self.render_platforms(window)
-        
+
         # Spawn Platform at Spawn Rate Intervals (TODO: Add Platform Variations - Done)
         if time.time() - self.spawn_time > self.spawn_rate:
             self.platform_list.append(self.spawn_platform(window.get_width(), colors))
@@ -80,9 +99,9 @@ class Platform_Manager(BaseModel):
     def increment_difficulty(self, level: int):
 
         # Increase Speed of Platforms Every up to Level 20 (every 2 Levels)
-        if level < 20 and level%2 == 0:
+        if level < 20 and level % 2 == 0:
             self.horz_speed += 1
             self.vert_speed += 1
-            
+
             if not self.spawn_rate < 0.2:
                 self.spawn_rate -= 0.2

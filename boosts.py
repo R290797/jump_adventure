@@ -1,12 +1,10 @@
-from abc import ABC, abstractmethod
-import threading
-
 import pygame
 import time
 from pydantic import BaseModel, Field
 
+
 class BoostEffect(BaseModel):
-    
+
     duration: float = Field(default=5.0)
     collection_time: float = Field(default=0.0)
     active: bool = Field(default=False)
@@ -33,6 +31,7 @@ class BoostEffect(BaseModel):
     def remove_effect(self):
         pass
 
+
 class Parachute(BoostEffect):
 
     def apply_effect(self):
@@ -40,6 +39,7 @@ class Parachute(BoostEffect):
 
     def remove_effect(self):
         self.active = False
+
 
 class Shield(BoostEffect):
 
@@ -50,6 +50,7 @@ class Shield(BoostEffect):
 
     def remove_effect(self):
         self.active = False
+
 
 class DoubleJump(BoostEffect):
 

@@ -1,7 +1,7 @@
 import pygame
 import random
-from player import Player  # Ensure this import path is correct for your project structure
 from boosts import Parachute, Shield, DoubleJump
+
 
 class BoostItem:
     def __init__(self, x, y, width, height, boost_type, speed=2):
@@ -30,6 +30,7 @@ class BoostItem:
         # Check if item collides with player
         item_rect = pygame.Rect(self.x, self.y, self.width, self.height)
         return item_rect.colliderect(player_rect)
+
 
 class BoostItemManager:
     def __init__(self, window_width, window_height, player):

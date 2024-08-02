@@ -4,12 +4,13 @@ from projectile import Projectile
 from enemy_manager import Enemy_Manager
 import time
 
+
 class Projectile_Manager(BaseModel):
 
     # Projectile List
     projectile_list: list[Projectile] = Field(default_factory=list)
 
-     # Rect List
+    # Rect List
     rect_list: list = Field(default_factory=list)
 
     # Cooldown/Shot Logic Attributes
@@ -22,10 +23,19 @@ class Projectile_Manager(BaseModel):
 
     # Add Projectile
     def add_projectile(self, x, y, width, height, speed, hit_sound):
-        
+
         # Check if Shoot conditions are met (Shoot Condition)
         if time.time() - self.last_shot > self.shoot_cooldown:
-            self.projectile_list.append(Projectile(x=x, y=y, width=width, height=height, speed=speed, hit_sound=hit_sound))
+            self.projectile_list.append(
+                Projectile(
+                    x=x,
+                    y=y,
+                    width=width,
+                    height=height,
+                    speed=speed,
+                    hit_sound=hit_sound,
+                )
+            )
             self.last_shot = time.time()
 
     # Render Projectiles in List
@@ -40,10 +50,6 @@ class Projectile_Manager(BaseModel):
             self.rect_list.append(rect)
 
         return self.rect_list
-    
-    # Class Config (Ensure Functions can be called without instantiating the class)
-    class Config:
-        arbitrary_types_allowed = True
 
     # Move Projectiles
     def move_projectiles(self):
@@ -59,7 +65,12 @@ class Projectile_Manager(BaseModel):
                 self.projectile_list.remove(proj)
 
             # If Projectile Leaves the Screen
-            elif proj.y < -20  or proj.y > window.get_height() + 20 or proj.x < -10 or proj.x > window.get_width() + 10:
+            elif (
+                proj.y < -20
+                or proj.y > window.get_height() + 20
+                or proj.x < -10
+                or proj.x > window.get_width() + 10
+            ):
                 self.projectile_list.remove(proj)
 
     # Managee Projectiles (Move and Remove)
