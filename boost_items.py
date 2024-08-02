@@ -39,11 +39,11 @@ class BoostItemManager:
         self.items = []
 
     def spawn_item(self):
-        
+
         # Randomly spawn a new boost item at the top of the screen
         x = random.randint(0, self.window_width - 20)
         y = 0
-        width, height = 20, 20  # Size of the boost item
+        width, height = 40, 40  # Size of the boost item
         boost_type = random.choice(["parachute", "shield", "double_jump"])
         item = BoostItem(x, y, width, height, boost_type)
         self.items.append(item)
