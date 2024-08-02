@@ -160,7 +160,9 @@ def event_handler(menu_active, game_over):
                 if event.key == pygame.K_RIGHT:
                     player.x_delta -= player.speed
 
-
+#The following code inspried by a guide found on Pygame tutorial
+# 'Work with text' by Raphael Holzer Revision b84b643a
+# Available at: https://pygame.readthedocs.io/en/latest/4_text/text.html
 # Create and Render Text on the Screen
 def render_text(text, font, color, surface, x, y):
     textobj = font.render(text, True, color)
