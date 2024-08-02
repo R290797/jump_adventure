@@ -36,7 +36,7 @@ class Projectile(BaseModel):
         self.y += self.y_delta * self.speed
 
     # Function to Get Collision Rect
-    def get_rect(self):
+    def get_rect(self) -> pygame.Rect:
         return pygame.Rect(self.x, self.y, self.width, self.height)
 
     # Collision Detection with Enemies
