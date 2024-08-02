@@ -1,0 +1,30 @@
+How to Play:
+
+Use the arrow keys to move:
+  - LEFT: Move left
+  - RIGHT: Move right
+  - UP: Shoot
+Press SPACE to jump.
+Press Q to quit the game.
+
+Game Objectives:
+  - Avoid enemies and stay on platforms as difficulty increases.
+  - Collect boost items for extra points.
+  - Tip: You can go through sides of the screen and come out the other side
+
+Platform Types:
+  - Normal Platform: Static platforms to stand on.
+  - Moving Platform: Platforms that move horizontally.
+  - Falling Platform: Platforms that fall rapidly.
+  - Disappearing Platform: Platforms that disappear when jump from them.
+
+Enemy Types:
+  - Basic Enemy: Moves in a straight line.
+  - Bouncing Enemy: Moves in a bouncing pattern.
+  - Chasing Enemy: Follows the player.
+  - Tip: You can kill the enemies by jumping on them
+
+Boost Items:
+  - Parachute: Slows down your fall.
+  - Double Jump: Allows you to jump again while in the air.
+  - Shield: Protects you from enemies.
