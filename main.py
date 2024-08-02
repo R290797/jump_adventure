@@ -236,13 +236,13 @@ def render_all_icons(screen: pygame.surface):
 
     # if player effect is active, display image
     if player.double_jump_active:
-        render_icon_image(window, "Resources/Sprites/Sprite-double_jump_powerup.png", 0, (screen.get_height() - 40))
+        render_icon_image(window, "Resources/Sprites/Sprite-double_jump_powerup.png", 10, (screen.get_height() - 50))
     
     if player.shield:
-        render_icon_image(window, "Resources/Sprites/Sprite-shield_powerup.png", 40, (screen.get_height() - 40))
+        render_icon_image(window, "Resources/Sprites/Sprite-shield_powerup.png", 60, (screen.get_height() - 50))
 
     if player.parachute:
-        render_icon_image(window, "Resources/Sprites/Sprite-parachute_powerup.png", 80, (screen.get_height() - 40))
+        render_icon_image(window, "Resources/Sprites/Sprite-parachute_powerup.png", 110, (screen.get_height() - 50))
 
 
 # Rendering all Game Images

@@ -1,32 +1,44 @@
 from abc import ABC, abstractmethod
 import threading
 
-class BoostEffect(ABC):
-    def __init__(self, player, duration=5):
-        self.player = player
-        self.duration = duration
-        self.active = False
+import pygame
+import time
+from pydantic import BaseModel, Field
+from player import Player
+
+class BoostEffect(BaseModel):
+    
+    player: Player
+    duration: float = Field(default=5.0)
+    collection_time: float = Field(default=0.0)
+    active: bool = Field(default=False)
 
     def activate(self):
+
         if not self.active:
+            self.collection_time = time.time()
             self.active = True
             self.apply_effect()
-            threading.Timer(self.duration, self.deactivate).start()
+
 
     def deactivate(self):
         if self.active:
             self.active = False
             self.remove_effect()
 
-    @abstractmethod
+    def check_duration(self):
+
+        if time.time() - self.collection_time > self.duration:
+            self.deactivate()
+
     def apply_effect(self):
         pass
 
-    @abstractmethod
     def remove_effect(self):
         pass
 
 class Parachute(BoostEffect):
+
     def apply_effect(self):
         # Reduce the player's gravity more significantly to slow down falling
         self.original_gravity = self.player.gravity  # Store the original gravity
@@ -38,6 +50,7 @@ class Parachute(BoostEffect):
 
 
 class Shield(BoostEffect):
+
     def apply_effect(self):
         self.player.shield_active = True
 
@@ -45,6 +58,7 @@ class Shield(BoostEffect):
         self.player.shield_active = False
 
 class DoubleJump(BoostEffect):
+
     def apply_effect(self):
         self.player.double_jump_active = True
 
