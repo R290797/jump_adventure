@@ -104,7 +104,7 @@ class Player(BaseModel):
         )
 
     # Check if Player is Grounded (and Apply Gravity)
-    def check_grounded(self) -> None: 
+    def check_grounded(self) -> None:
 
         # Check if Player is Grounded
         if self.grounded:
@@ -138,10 +138,10 @@ class Player(BaseModel):
             return True
         else:
             return False
-        
-#The following code inspried by a guide found on youtube
-# 'Wrap Around Movement - PyGame Thursdays 29' by codemy.com
-# Available at: https://youtu.be/NzCulpYC0p8?si=pC2ub_RixVEi9ekQ
+
+    # The following code inspried by a guide found on youtube
+    # 'Wrap Around Movement - PyGame Thursdays 29' by codemy.com
+    # Available at: https://youtu.be/NzCulpYC0p8?si=pC2ub_RixVEi9ekQ
     # Wrap Around Logic
     def wrap_around(self, screen_width) -> None:
         if self.x > screen_width:
@@ -196,7 +196,6 @@ class Player(BaseModel):
         # If below screen, set alive to false
         if self.y > window.get_height() + 100:
             self.alive = False
-
 
     # Update Player Movement
     def update(self, window: pygame.surface, enemy_manager: Enemy_Manager):
@@ -317,8 +316,8 @@ class Player(BaseModel):
                 and not self.shield.active
             ):
                 self.alive = False
-                
-#The following code modified by ChatGPT 
+
+    # The following code modified by ChatGPT
 
     # Boost Mechanic Functions (Collision and Collecting)
     def collect_parachute(self):

@@ -42,6 +42,7 @@ class Platform(BaseModel):
 
 # Platform Variations
 
+
 # Horizontal Platform
 class Horizontal_Platform(Platform):
 

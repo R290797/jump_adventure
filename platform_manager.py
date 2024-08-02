@@ -11,6 +11,7 @@ import pygame
 
 # Use pytest -p no:warnings
 
+
 class Platform_Manager(BaseModel):
 
     # Spawn Attributes
@@ -106,6 +107,5 @@ class Platform_Manager(BaseModel):
             self.horz_speed += 1
             self.vert_speed += 1
 
-        if  self.spawn_rate > 0.2:
+        if self.spawn_rate > 0.2:
             self.spawn_rate -= 0.2
-                

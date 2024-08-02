@@ -160,7 +160,8 @@ def event_handler(menu_active, game_over) -> None:
                 if event.key == pygame.K_RIGHT:
                     player.x_delta -= player.speed
 
-#The following code inspried by a guide found on Pygame tutorial
+
+# The following code inspried by a guide found on Pygame tutorial
 # 'Work with text' by Raphael Holzer Revision b84b643a
 # Available at: https://pygame.readthedocs.io/en/latest/4_text/text.html
 # Create and Render Text on the Screen
@@ -262,7 +263,9 @@ def render_background(game_over: bool) -> None:
 
 
 # Render Power Up Buff Effect Icon
-def render_icon_image(screen: pygame.surface, path: str, x_pos: int, y_pos: int) -> None:
+def render_icon_image(
+    screen: pygame.surface, path: str, x_pos: int, y_pos: int
+) -> None:
 
     icon_image = pygame.image.load(path)
     icon_image = pygame.transform.scale(icon_image, (40, 40))
@@ -327,10 +330,10 @@ menu = Menu(window, font, colors)
 
 # Create Player Object
 player = Player(
-        power_sound=power_sound,
-        hit_sound=hit_sound,
-        break_sound=break_sound,
-    )
+    power_sound=power_sound,
+    hit_sound=hit_sound,
+    break_sound=break_sound,
+)
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
