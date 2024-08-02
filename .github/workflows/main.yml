@@ -17,7 +17,11 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install --upgrade -r requirements.txt
+        sudo apt-get update
+        sudo apt-get install -y libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev xvfb
+        python -m pip install --upgrade pip
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install pygame pydantic pytest pytest-cov flake8
 
     - name: Lint with flake8
       run: |
@@ -27,8 +31,8 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest -p no:warnings test.py 
-
+        xvfb-run -a pytest -p no:warnings --cov=. --cov-report=xml test.py
+        
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2
       with:
