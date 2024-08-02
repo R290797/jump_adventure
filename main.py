@@ -79,23 +79,23 @@ game_font = pygame.font.SysFont("Consolas", 30)
 # Available at: https://thepythoncode.com/article/add-sound-effects-to-python-game-with-pygame
 # Load Sound Effects
 jump_sound = pygame.mixer.Sound(
-    "SoundEffects/Jump-SoundEffect.wav"
+    "Resources/Sounds/Jump-SoundEffect.wav"
 )  # Royalty Free Music: https://mixkit.co/
 shoot_sound = pygame.mixer.Sound(
-    "SoundEffects/Shoot-SoundEffect.wav"
+    "Resources/Sounds/Shoot-SoundEffect.wav"
 )  # Royalty Free Music: https://mixkit.co/
 power_sound = pygame.mixer.Sound(
-    "SoundEffects/PowerUp-SoundEffect.wav"
+    "Resources/Sounds/PowerUp-SoundEffect.wav"
 )  # Royalty Free Music: https://mixkit.co/
 game_over_sound = pygame.mixer.Sound(
-    "SoundEffects/GameOver-SoundEffect.wav"
+    "Resources/Sounds/GameOver-SoundEffect.wav"
 )  # Royalty Free Music: https://mixkit.co/
 hit_sound = pygame.mixer.Sound("Resources/Sounds/EnemyImpact-SoundEffect.wav")
 break_sound = pygame.mixer.Sound("Resources/Sounds/WoodHit-SoundEffect.wav")
 
 # Load Game Play Music
 game_play_music = pygame.mixer.Sound(
-    "SoundEffects/GamePlay-SoundEffect.mp3"
+    "Resources/Sounds/GamePlay-SoundEffect.mp3"
 )  # Royalty Free Music: https://www.bensound.com/
 # pygame.mixer.music.load(game_play_music)
 
