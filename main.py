@@ -105,7 +105,7 @@ game_play_music = pygame.mixer.Sound(
 
 
 # Event Handler (For User Inputs)
-def event_handler(menu_active, game_over):
+def event_handler(menu_active, game_over) -> None:
     global running
     global player
     global start_time
@@ -164,7 +164,7 @@ def event_handler(menu_active, game_over):
 # 'Work with text' by Raphael Holzer Revision b84b643a
 # Available at: https://pygame.readthedocs.io/en/latest/4_text/text.html
 # Create and Render Text on the Screen
-def render_text(text, font, color, surface, x, y):
+def render_text(text, font, color, surface, x, y) -> None:
     textobj = font.render(text, True, color)
     textrect = textobj.get_rect()
     textrect.center = (x, y)
@@ -172,13 +172,13 @@ def render_text(text, font, color, surface, x, y):
 
 
 # Check and Save High Score Function
-def check_and_save_high_score(score, menu):
+def check_and_save_high_score(score, menu) -> None:
     if score > 0:
         menu.save_high_score(score)
 
 
 # Render Player Image
-def render_player_image(screen: pygame.surface):
+def render_player_image(screen: pygame.surface) -> None:
     global player
 
     player_image = pygame.image.load("Resources/Sprites/monke1.png")
@@ -187,7 +187,7 @@ def render_player_image(screen: pygame.surface):
 
 
 # Render Platform Images
-def render_platform_images(screen: pygame.surface):
+def render_platform_images(screen: pygame.surface) -> None:
     global platform_manager
     temp_image = None
 
@@ -206,7 +206,7 @@ def render_platform_images(screen: pygame.surface):
 
 
 # Render Enemy Images
-def render_enemy_images(screen: pygame.surface):
+def render_enemy_images(screen: pygame.surface) -> None:
     global enemy_manager
     temp_image = None
 
@@ -224,7 +224,7 @@ def render_enemy_images(screen: pygame.surface):
 
 
 # Render Projectile Images
-def render_projectile_images(screen: pygame.surface):
+def render_projectile_images(screen: pygame.surface) -> None:
     global player
 
     for proj in player.projectile_manager.projectile_list:
@@ -233,7 +233,7 @@ def render_projectile_images(screen: pygame.surface):
         screen.blit(proj_image, (proj.x, proj.y))
 
 
-def render_boost_images(screen: pygame.surface):
+def render_boost_images(screen: pygame.surface) -> None:
     global boost_item_manager
     temp_image = None
 
@@ -252,7 +252,7 @@ def render_boost_images(screen: pygame.surface):
 
 
 # Render Moving Backround
-def render_background(game_over: bool):
+def render_background(game_over: bool) -> None:
 
     for background in background_list:
         background.render()
@@ -262,14 +262,14 @@ def render_background(game_over: bool):
 
 
 # Render Power Up Buff Effect Icon
-def render_icon_image(screen: pygame.surface, path: str, x_pos: int, y_pos: int):
+def render_icon_image(screen: pygame.surface, path: str, x_pos: int, y_pos: int) -> None:
 
     icon_image = pygame.image.load(path)
     icon_image = pygame.transform.scale(icon_image, (40, 40))
     screen.blit(icon_image, (x_pos, y_pos))
 
 
-def render_all_icons(screen: pygame.surface):
+def render_all_icons(screen: pygame.surface) -> None:
 
     # if player effect is active, display image
     if player.double_jump.active:
@@ -298,7 +298,7 @@ def render_all_icons(screen: pygame.surface):
 
 
 # Rendering all Game Images
-def render_game_images(window: pygame.surface):
+def render_game_images(window: pygame.surface) -> None:
 
     # Render Player
     render_player_image(window)
@@ -351,7 +351,7 @@ level_time = time.time()
 
 
 # Function to Reset / Start the Game
-def init_new_game(menu_status: bool):
+def init_new_game(menu_status: bool) -> None:
 
     # Get Global Variables
     global menu, game_over, start_time, final_time, level, player, platform_manager, enemy_manager, boost_item_manager, level_time
@@ -377,7 +377,7 @@ def init_new_game(menu_status: bool):
 
 
 # Function to Increase the Level
-def increase_level():
+def increase_level() -> None:
     global level, enemy_manager, platform_manager, start_time, level_time
 
     # Every 20 Seconds, Increase Level by One
