@@ -325,18 +325,10 @@ menu = Menu(window, font, colors)
 
 # Create Player Object
 player = Player(
-    x=window.get_width() / 2 - 25,
-    y=30,
-    width=60,
-    height=60,
-    color=colors["green"],
-    speed=3,
-    jump_height=20,
-    gravity=1,
-    power_sound=power_sound,
-    hit_sound=hit_sound,
-    break_sound=break_sound,
-)
+        power_sound=power_sound,
+        hit_sound=hit_sound,
+        break_sound=break_sound,
+    )
 
 # Create Platform Manager
 platform_manager = Platform_Manager()
@@ -373,14 +365,6 @@ def init_new_game(menu_status: bool):
     level = 1
     level_time = time.time()
     player = Player(
-        x=window.get_width() / 2 - 25,
-        y=30,
-        width=60,
-        height=60,
-        color=colors["green"],
-        speed=3,
-        jump_height=20,
-        gravity=1,
         power_sound=power_sound,
         hit_sound=hit_sound,
         break_sound=break_sound,

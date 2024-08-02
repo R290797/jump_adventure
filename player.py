@@ -15,10 +15,10 @@ from boosts import Parachute, Shield, DoubleJump
 class Player(BaseModel):
 
     # Position Attributes
-    x: int
-    y: int
-    width: PositiveInt
-    height: PositiveInt
+    x: int = Field(default=440)
+    y: int = Field(default=70)
+    width: int = Field(default=60)
+    height: int = Field(default=60)
     color: tuple[int, int, int] = Field(default=(0, 255, 0))
 
     # Sounds Effects
@@ -27,7 +27,7 @@ class Player(BaseModel):
     break_sound: pygame.mixer.Sound
 
     # Movement Attributes
-    speed: int = Field(default=2)
+    speed: int = Field(default=3)
     gravity: float = Field(default=1)
     x_delta: int = Field(default=0)
     y_delta: int = Field(default=0)
@@ -38,7 +38,7 @@ class Player(BaseModel):
     # Jump Mechnics
     grounded: bool = Field(default=False)
     can_jump: bool = Field(default=True)
-    jump_height: PositiveInt = Field(default=10)
+    jump_height: PositiveInt = Field(default=20)
     double_jump_active: bool = Field(default=False)
 
     # Grounded Buffer (Prevents inconsistent collision detection) and Platform Interactions
