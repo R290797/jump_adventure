@@ -235,13 +235,13 @@ def render_icon_image(screen: pygame.surface, path: str, x_pos: int, y_pos: int)
 def render_all_icons(screen: pygame.surface):
 
     # if player effect is active, display image
-    if player.double_jump_active:
+    if player.double_jump.active:
         render_icon_image(window, "Resources/Sprites/Sprite-double_jump_powerup.png", 10, (screen.get_height() - 50))
     
-    if player.shield:
+    if player.shield.active:
         render_icon_image(window, "Resources/Sprites/Sprite-shield_powerup.png", 60, (screen.get_height() - 50))
 
-    if player.parachute:
+    if player.parachute.active:
         render_icon_image(window, "Resources/Sprites/Sprite-parachute_powerup.png", 110, (screen.get_height() - 50))
 
 
@@ -331,8 +331,6 @@ def increase_level():
 
 while running:
 
-    
-  
     # Handle Menu Actions
     if menu.active:
         for event in pygame.event.get():
@@ -409,11 +407,14 @@ while running:
                     window, screen_width-915, 50)
 
         # Debug - Show Enemy Count
-        grounded_status = f"Enemies: {len(enemy_manager.enemy_list)}"
+        grounded_status = f"P: {player.parachute.active}"
         render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
 
-        last_touch = f"plats: {len(platform_manager.platform_list)}"
-        render_text(last_touch, font, colors["black"], window, screen_width-900, 180)
+        last_touch = f"D: {player.double_jump.active}"
+        render_text(last_touch, font, colors["black"], window, screen_width-900, 140)
+
+        last_touch = f"S: {player.shield.active}"
+        render_text(last_touch, font, colors["black"], window, screen_width-900, 170)
 
         if game_over:
             render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
