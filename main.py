@@ -63,6 +63,8 @@ font = pygame.font.SysFont(None, 55)
 font_medium = pygame.font.SysFont(None, 30)
 font_small = pygame.font.SysFont(None, 20)
 
+game_font = pygame.font.SysFont("Consolas", 30)
+
 # The following code inspried by a guide found on The Python Code
 # 'How to Add Sound Effects to your Python Game' by Michael Maranan
 # Available at: https://thepythoncode.com/article/add-sound-effects-to-python-game-with-pygame 
@@ -393,33 +395,25 @@ while running:
             # Render Images
             render_game_images(window)
 
-        # Display the Timer/Score
-        elapsed_time = final_time if game_over else time.time() - start_time
-        score_text = f"Score: {int(elapsed_time)}"
-        level_text = f"Level: {level}"
+            # Display the Timer/Score
+            elapsed_time = final_time if game_over else time.time() - start_time
+            score_text = f"Score: {int(elapsed_time)}"
+            level_text = f"Level: {level}"
 
-        # Positioned near upper right corner 
-        render_text(score_text, font, colors["black"], 
-                    window, screen_width-915, 20) 
-        
-        render_text(level_text, font, colors["black"],
-                    window, screen_width-915, 50)
+            # Positioned near upper right corner 
+            render_text(score_text, game_font, colors["black"], 
+                        window, screen_width-920, 20) 
+            
+            render_text(level_text, game_font, colors["black"],
+                        window, screen_width-922, 50)
 
-        # Debug - Show Enemy Count
-        grounded_status = f"P: {player.parachute.active}"
-        render_text(grounded_status, font, colors["black"], window, screen_width-900, 110)
-
-        last_touch = f"D: {player.double_jump.active}"
-        render_text(last_touch, font, colors["black"], window, screen_width-900, 140)
-
-        last_touch = f"S: {player.shield.active}"
-        render_text(last_touch, font, colors["black"], window, screen_width-900, 170)
+   
 
         if game_over:
             render_text("Game Over", font, colors["red"], window, screen_width / 2, screen_height / 2)
 
             check_and_save_high_score(int(elapsed_time), menu)
-            render_text(f"Final Score: {int(elapsed_time)}", font_medium, colors["red"], window, screen_width / 2, (screen_height / 2) + 30)
+            render_text(f"Final Score: {int(elapsed_time)}, Level: {int(level)}", font_medium, colors["red"], window, screen_width / 2, (screen_height / 2) + 30)
             render_text("Press R to Reset, Press for Main Menu, Press Q to Quit", font_small, colors["black"], window, screen_width / 2, (screen_height / 2) + 50)
 
     # Event Handler
